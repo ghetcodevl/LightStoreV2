@@ -4,6 +4,7 @@
  */
 package controller;
 
+import dao.ProductDAO;
 import dao.UserDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -13,6 +14,9 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.util.HashMap;
+import java.util.Map;
+import model.Product;
 import model.User;
 import org.mindrot.jbcrypt.BCrypt;
 
@@ -55,7 +59,7 @@ public class LoginServlet extends HttpServlet {
 //            return;
 //        }
 //        request.getRequestDispatcher("/login.jsp").forward(request, response);
-             // Kiểm tra nếu đã đăng nhập thì chuyển về home
+        // Kiểm tra nếu đã đăng nhập thì chuyển về home
         HttpSession session = request.getSession(false);
         if (session != null && session.getAttribute("user") != null) {
             response.sendRedirect(request.getContextPath() + "/Home");
@@ -65,79 +69,122 @@ public class LoginServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        String email = request.getParameter("email");
-        String password = request.getParameter("password");
-
-        if (email == null) {
-            email = "";
-        }
-        if (password == null) {
-            password = "";
-        }
-
-        email = email.trim();
-        password = password.trim();
-
-        if (email.isEmpty() || password.isEmpty()) {
-            request.setAttribute("mess", "Vui lòng nhập email và mật khẩu");
+    
+protected void doPost(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException {
+    String email = request.getParameter("email");
+    String password = request.getParameter("password");
+    
+    if (email == null) email = "";
+    if (password == null) password = "";
+    
+    email = email.trim();
+    password = password.trim();
+    
+    if (email.isEmpty() || password.isEmpty()) {
+        request.setAttribute("mess", "Vui lòng nhập email và mật khẩu");
+        request.getRequestDispatcher("/login.jsp").forward(request, response);
+        return;
+    }
+    
+    try {
+        UserDAO dao = new UserDAO();
+        User u = dao.getUserByEmail(email);
+        
+        if (u == null) {
+            request.setAttribute("mess", "Email hoặc mật khẩu không đúng");
             request.getRequestDispatcher("/login.jsp").forward(request, response);
             return;
         }
-
-        try {
-            UserDAO dao = new UserDAO();
-            User u = dao.getUserByEmail(email);
-
-            if (u == null) {
-                request.setAttribute("mess", "Email hoặc mật khẩu không đúng");
-                request.getRequestDispatcher("/login.jsp").forward(request, response);
-                return;
-            }
-
-            boolean match = BCrypt.checkpw(password, u.getPassword());
-
-            // Trong doPost method, sửa phần redirect
-            if (match) {
-                HttpSession session = request.getSession();
-                session.setAttribute("user", u);
-                session.setMaxInactiveInterval(30 * 60);
-
-                // Kiểm tra có redirect sau đăng nhập không
-                String redirectUrl = (String) session.getAttribute("redirectAfterLogin");
-                String loginMessage = (String) session.getAttribute("loginMessage");
-
-                // Xóa các attribute tạm thời
-                session.removeAttribute("redirectAfterLogin");
-                session.removeAttribute("loginMessage");
-
-                // Nếu có message thì hiển thị
-                if (loginMessage != null && !loginMessage.isEmpty()) {
-                    session.setAttribute("cartMessage", loginMessage);
-                }
-
-                if ("admin".equals(u.getRole())) {
-                    response.sendRedirect(request.getContextPath() + "/admin/dashboard.jsp");
-                } else if (redirectUrl != null && !redirectUrl.isEmpty()) {
-                    // THÊM CONTEXT PATH VÀO redirectUrl NẾU CẦN
-                    if (!redirectUrl.startsWith(request.getContextPath())) {
-                        redirectUrl = request.getContextPath() + redirectUrl;
+        
+        boolean match = BCrypt.checkpw(password, u.getPassword());
+        
+        if (match) {
+            HttpSession session = request.getSession();
+            session.setAttribute("user", u);
+            session.setMaxInactiveInterval(30 * 60);
+            
+            // Kiểm tra có sản phẩm đang chờ thêm vào giỏ không
+            String pendingProductId = (String) session.getAttribute("pendingProductId");
+            String pendingQuantity = (String) session.getAttribute("pendingQuantity");
+            String pendingAction = (String) session.getAttribute("pendingAction");
+            
+            // Xóa pending attributes
+            session.removeAttribute("pendingProductId");
+            session.removeAttribute("pendingQuantity");
+            session.removeAttribute("pendingAction");
+            
+            // Nếu có sản phẩm đang chờ, thêm vào giỏ hàng
+            if (pendingProductId != null && "add".equals(pendingAction)) {
+                try {
+                    int productId = Integer.parseInt(pendingProductId);
+                    int quantity = 1;
+                    if (pendingQuantity != null && !pendingQuantity.isEmpty()) {
+                        quantity = Integer.parseInt(pendingQuantity);
                     }
-                    response.sendRedirect(redirectUrl);
-                } else {
-                    response.sendRedirect(request.getContextPath() + "/Home");
+                    
+                    // Lấy giỏ hàng từ session
+                    Map<Integer, Integer> cart = (Map<Integer, Integer>) session.getAttribute("cart");
+                    if (cart == null) {
+                        cart = new HashMap<>();
+                    }
+                    
+                    // Thêm sản phẩm vào giỏ
+                    if (cart.containsKey(productId)) {
+                        cart.put(productId, cart.get(productId) + quantity);
+                    } else {
+                        cart.put(productId, quantity);
+                    }
+                    
+                    session.setAttribute("cart", cart);
+                    
+                    // Lấy tên sản phẩm để thông báo
+                    ProductDAO productDAO = new ProductDAO();
+                    Product product = productDAO.getById(productId);
+                    if (product != null) {
+                        session.setAttribute("cartMessage", "Đã thêm " + product.getName() + " vào giỏ hàng!");
+                    } else {
+                        session.setAttribute("cartMessage", "Đã thêm sản phẩm vào giỏ hàng!");
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-                return;
-
-            } else {
-                request.setAttribute("mess", "Email hoặc mật khẩu không đúng");
-                request.getRequestDispatcher("/login.jsp").forward(request, response);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-            request.setAttribute("mess", "Lỗi hệ thống, vui lòng thử lại sau");
+            
+            // Kiểm tra có redirect sau đăng nhập không
+            String redirectUrl = (String) session.getAttribute("redirectAfterLogin");
+            String loginMessage = (String) session.getAttribute("loginMessage");
+            
+            // Xóa các attribute tạm thời
+            session.removeAttribute("redirectAfterLogin");
+            session.removeAttribute("loginMessage");
+            
+            // Nếu có message thì hiển thị (nhưng nếu đã thêm sản phẩm thì không ghi đè)
+            if (loginMessage != null && !loginMessage.isEmpty() && session.getAttribute("cartMessage") == null) {
+                session.setAttribute("cartMessage", loginMessage);
+            }
+            
+            // Chuyển hướng
+            if ("admin".equals(u.getRole())) {
+                response.sendRedirect(request.getContextPath() + "/admin/dashboard.jsp");
+            } else if (redirectUrl != null && !redirectUrl.isEmpty()) {
+                // Đảm bảo redirectUrl có context path
+                if (!redirectUrl.startsWith(request.getContextPath()) && !redirectUrl.startsWith("/")) {
+                    redirectUrl = request.getContextPath() + "/" + redirectUrl;
+                }
+                response.sendRedirect(redirectUrl);
+            } else {
+                response.sendRedirect(request.getContextPath() + "/Home");
+            }
+            return;
+        } else {
+            request.setAttribute("mess", "Email hoặc mật khẩu không đúng");
             request.getRequestDispatcher("/login.jsp").forward(request, response);
         }
+    } catch (Exception e) {
+        e.printStackTrace();
+        request.setAttribute("mess", "Lỗi hệ thống, vui lòng thử lại sau");
+        request.getRequestDispatcher("/login.jsp").forward(request, response);
     }
+}
 }
