@@ -11,9 +11,9 @@
     </head>
     <body>
         <div class="container">
-            <div class="banner">
+<!--            <div class="banner">
                 <img src="images/banner.jpg" alt="DecorLamp Banner">
-            </div>
+            </div>-->
 
             <!-- Top Menu -->
              <!-- Top Menu -->
@@ -53,6 +53,7 @@
 
 
             <div class="main-content">
+                 <!-- Left Menu -->
                 <div class="left-menu">
                     <div class="menu-title">Danh mục sản phẩm</div>
                     <ul>
@@ -61,7 +62,14 @@
                         <li><a href="products?category=3">Đèn chùm Đồng</a></li>
                         <li><a href="products?category=4">Đèn chùm phòng khách</a></li>
                     </ul>
+                    <div class="menu-title">Sản phẩm nổi bật</div>
+                    <ul>
+                        <li><a href="products?tag=new">Hàng mới</a></li>
+                        <li><a href="products?tag=bestseller">Bán chạy</a></li>
+                        <li><a href="products?tag=sale">Giảm giá</a></li>
+                    </ul>
                 </div>
+
 
                 <div class="content">
                     <div class="content-title">LIÊN HỆ VỚI CHÚNG TÔI</div>

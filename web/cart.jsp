@@ -10,9 +10,9 @@
 </head>
 <body>
     <div class="container">
-        <div class="banner">
+<!--        <div class="banner">
             <img src="${pageContext.request.contextPath}/images/banner.jpg" alt="DecorLamp Banner">
-        </div>
+        </div>-->
 
          <!-- Top Menu -->
             <div class="top-menu">
@@ -42,15 +42,22 @@
 
 
         <div class="main-content">
-            <div class="left-menu">
-                <div class="menu-title">Danh mục sản phẩm</div>
-                <ul>
-                    <li><a href="${pageContext.request.contextPath}/products?category=1">Đèn Chùm Pha Lê</a></li>
-                    <li><a href="${pageContext.request.contextPath}/products?category=2">Đèn chùm cổ điển</a></li>
-                    <li><a href="${pageContext.request.contextPath}/products?category=3">Đèn chùm Đồng</a></li>
-                    <li><a href="${pageContext.request.contextPath}/products?category=4">Đèn chùm phòng khách</a></li>
-                </ul>
-            </div>
+            <!-- Left Menu -->
+                <div class="left-menu">
+                    <div class="menu-title">Danh mục sản phẩm</div>
+                    <ul>
+                        <li><a href="products?category=1">Đèn Chùm Pha Lê</a></li>
+                        <li><a href="products?category=2">Đèn chùm cổ điển</a></li>
+                        <li><a href="products?category=3">Đèn chùm Đồng</a></li>
+                        <li><a href="products?category=4">Đèn chùm phòng khách</a></li>
+                    </ul>
+                    <div class="menu-title">Sản phẩm nổi bật</div>
+                    <ul>
+                        <li><a href="products?tag=new">Hàng mới</a></li>
+                        <li><a href="products?tag=bestseller">Bán chạy</a></li>
+                        <li><a href="products?tag=sale">Giảm giá</a></li>
+                    </ul>
+                </div>
 
             <div class="content">
                 <div class="content-title">GIỎ HÀNG CỦA BẠN</div>

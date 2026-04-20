@@ -12,9 +12,9 @@
     <body>
         <div class="container">
             <!-- Banner -->
-            <div class="banner">
+<!--            <div class="banner">
                 <img src="images/banner.jpg" alt="DecorLamp Banner">
-            </div>
+            </div>-->
 
            <!-- Top Menu -->
             <div class="top-menu">

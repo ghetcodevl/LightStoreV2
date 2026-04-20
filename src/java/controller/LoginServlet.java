@@ -166,7 +166,7 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response)
             
             // Chuyển hướng
             if ("admin".equals(u.getRole())) {
-                response.sendRedirect(request.getContextPath() + "/admin/dashboard.jsp");
+                response.sendRedirect("dashboard.jsp");
             } else if (redirectUrl != null && !redirectUrl.isEmpty()) {
                 // Đảm bảo redirectUrl có context path
                 if (!redirectUrl.startsWith(request.getContextPath()) && !redirectUrl.startsWith("/")) {

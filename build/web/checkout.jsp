@@ -110,9 +110,9 @@
 </head>
 <body>
     <div class="container">
-        <div class="banner">
+<!--        <div class="banner">
             <img src="${pageContext.request.contextPath}/images/banner.jpg" alt="DecorLamp Banner">
-        </div>
+        </div>-->
 
         <div class="top-menu">
             <ul>
@@ -122,31 +122,37 @@
                 <li><a href="${pageContext.request.contextPath}/cart">🛒 Giỏ hàng</a></li>
                 <c:choose>
                     <c:when test="${not empty sessionScope.user}">
-                        <li class="right-menu">
-                            <span class="user-name">👤 ${sessionScope.user.fullName}</span>
-                        </li>
-                        <li class="right-menu">
-                            <a href="#" onclick="confirmLogout(event)" class="logout-btn">? Đăng xuất</a>
-                        </li>
+                        <li style="flex: 1;"></li>
+                            <!-- Đã đăng nhập -->
+                            <li><span class="user-name">👤 ${sessionScope.user.fullName}</span></li>
+                            <li><a href="#" onclick="confirmLogout(event)" class="logout-btn">🚪 Đăng xuất</a></li>
                     </c:when>
                     <c:otherwise>
                         <li class="right-menu"><a href="${pageContext.request.contextPath}/LoginServlet">🔐 Đăng nhập</a></li>
                         <li class="right-menu"><a href="${pageContext.request.contextPath}/register">📝 Đăng ký</a></li>
                     </c:otherwise>
                 </c:choose>
+                        
             </ul>
         </div>
 
         <div class="main-content">
-            <div class="left-menu">
-                <div class="menu-title">Danh mục sản phẩm</div>
-                <ul>
-                    <li><a href="${pageContext.request.contextPath}/products?category=1">Đèn Chùm Pha Lê</a></li>
-                    <li><a href="${pageContext.request.contextPath}/products?category=2">Đèn chùm cổ điển</a></li>
-                    <li><a href="${pageContext.request.contextPath}/products?category=3">Đèn chùm Đồng</a></li>
-                    <li><a href="${pageContext.request.contextPath}/products?category=4">Đèn chùm phòng khách</a></li>
-                </ul>
-            </div>
+            <!-- Left Menu -->
+                <div class="left-menu">
+                    <div class="menu-title">Danh mục sản phẩm</div>
+                    <ul>
+                        <li><a href="products?category=1">Đèn Chùm Pha Lê</a></li>
+                        <li><a href="products?category=2">Đèn chùm cổ điển</a></li>
+                        <li><a href="products?category=3">Đèn chùm Đồng</a></li>
+                        <li><a href="products?category=4">Đèn chùm phòng khách</a></li>
+                    </ul>
+                    <div class="menu-title">Sản phẩm nổi bật</div>
+                    <ul>
+                        <li><a href="products?tag=new">Hàng mới</a></li>
+                        <li><a href="products?tag=bestseller">Bán chạy</a></li>
+                        <li><a href="products?tag=sale">Giảm giá</a></li>
+                    </ul>
+                </div>
 
             <div class="content">
                 <div class="content-title">📋 THANH TOÁN</div>
