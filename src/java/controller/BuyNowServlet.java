@@ -48,43 +48,35 @@ public class BuyNowServlet extends HttpServlet {
         }
     }
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
-     * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-       HttpSession session = request.getSession();
-        
+        response.setContentType("text/html;charset=UTF-8");
+        request.setCharacterEncoding("UTF-8");
+        HttpSession session = request.getSession();
+
         if (session.getAttribute("user") == null) {
             session.setAttribute("redirectAfterLogin", request.getRequestURI() + "?" + request.getQueryString());
             session.setAttribute("loginMessage", "Vui lòng đăng nhập để mua hàng!");
             response.sendRedirect(request.getContextPath() + "/LoginServlet");
             return;
         }
-        
+
         try {
             int productId = Integer.parseInt(request.getParameter("id"));
             int quantity = Integer.parseInt(request.getParameter("quantity"));
-            
+
             Map<Integer, Integer> tempCart = new HashMap<>();
             tempCart.put(productId, quantity);
             session.setAttribute("cart", tempCart);
-            
+
             response.sendRedirect(request.getContextPath() + "/checkout");
-            
+
         } catch (Exception e) {
             e.printStackTrace();
             response.sendRedirect(request.getContextPath() + "/products");
         }
     }
-    
 
     /**
      * Handles the HTTP <code>POST</code> method.

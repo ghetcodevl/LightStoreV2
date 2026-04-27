@@ -249,7 +249,7 @@ public class OrderDAO {
                     order.setAddress(rs.getString("address"));
                     order.setNote(rs.getString("note"));
                     order.setTotal(rs.getDouble("total"));
-                    order.setStatus(rs.getString("status"));
+//                    order.setStatus(rs.getString("status"));
                     order.setOrderDate(rs.getTimestamp("created_at"));
                     orders.add(order);
                 }
@@ -288,7 +288,7 @@ public class OrderDAO {
                     order.setAddress(rs.getString("address"));
                     order.setNote(rs.getString("note"));
                     order.setTotal(rs.getDouble("total"));
-                    order.setStatus(rs.getString("status"));
+//                    order.setStatus(rs.getString("status"));
                     order.setOrderDate(rs.getTimestamp("created_at"));
                 }
             }
@@ -344,7 +344,7 @@ public class OrderDAO {
                 }
             }
             
-            String sqlOrder = "INSERT INTO orders (user_id, total, name, phone, address, note, status, created_at) VALUES (?, ?, ?, ?, ?, ?, 'pending', NOW())";
+            String sqlOrder = "INSERT INTO orders (user_id, total, name, phone, address, note, created_at) VALUES (?, ?, ?, ?, ?, ?, NOW())";
             psOrder = conn.prepareStatement(sqlOrder, PreparedStatement.RETURN_GENERATED_KEYS);
             psOrder.setInt(1, userId);
             psOrder.setDouble(2, total);

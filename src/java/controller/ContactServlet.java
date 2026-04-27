@@ -17,7 +17,7 @@ import jakarta.servlet.http.HttpServletResponse;
  *
  * @author admin
  */
-@WebServlet(name = "ContactServlet", urlPatterns = {"/ContactServlet" , "/contact"})
+@WebServlet(name = "ContactServlet", urlPatterns = {"/ContactServlet", "/contact"})
 public class ContactServlet extends HttpServlet {
 
     /**
@@ -46,41 +46,41 @@ public class ContactServlet extends HttpServlet {
         }
     }
 
-   
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-         request.getRequestDispatcher("/contact.jsp").forward(request, response);
+        request.getRequestDispatcher("/contact.jsp").forward(request, response);
     }
 
-   
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-         String name = request.getParameter("name");
+        response.setContentType("text/html;charset=UTF-8");
+        request.setCharacterEncoding("UTF-8");
+        String name = request.getParameter("name");
         String email = request.getParameter("email");
         String message = request.getParameter("message");
-        
+
         // Validate
-        if (name == null || name.trim().isEmpty() ||
-            email == null || email.trim().isEmpty() ||
-            message == null || message.trim().isEmpty()) {
+        if (name == null || name.trim().isEmpty()
+                || email == null || email.trim().isEmpty()
+                || message == null || message.trim().isEmpty()) {
             request.setAttribute("error", "Vui lòng điền đầy đủ thông tin!");
             request.getRequestDispatcher("contact.jsp").forward(request, response);
             return;
         }
-        
+
         // Validate email format
         if (!email.matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
             request.setAttribute("error", "Email không đúng định dạng!");
             request.getRequestDispatcher("contact.jsp").forward(request, response);
             return;
         }
-        
+
         try {
             ContactDAO dao = new ContactDAO();
             boolean success = dao.insertContact(name, email, message);
-            
+
             if (success) {
                 request.setAttribute("success", "Cảm ơn bạn đã liên hệ! Chúng tôi sẽ phản hồi sớm.");
             } else {
@@ -90,10 +90,8 @@ public class ContactServlet extends HttpServlet {
             e.printStackTrace();
             request.setAttribute("error", "Có lỗi xảy ra, vui lòng thử lại!");
         }
-        
+
         request.getRequestDispatcher("contact.jsp").forward(request, response);
     }
-
-    
 
 }

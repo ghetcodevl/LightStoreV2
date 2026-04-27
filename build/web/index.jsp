@@ -218,6 +218,9 @@ Nhóm thực hiện: Nguyễn Văn A (01/01/2000), Trần Thị B (02/02/2000), 
 
                     <c:choose>
                         <c:when test="${not empty sessionScope.user}">
+                            <c:if test="${sessionScope.user.role == 'admin'}">
+                                <li><a href="${pageContext.request.contextPath}/admin/dashboard">📊 Dashboard</a></li>
+                                </c:if>
                             <!-- Thêm một li trống để đẩy các mục sang phải -->
                             <li style="flex: 1;"></li>
                             <!-- Đã đăng nhập -->
@@ -273,27 +276,27 @@ Nhóm thực hiện: Nguyễn Văn A (01/01/2000), Trần Thị B (02/02/2000), 
                     </div>
 
                     <!-- Welcome Section -->
-<!--                    <div class="welcome">
-                        <h2>🏠 Chào mừng đến với DecorLamp</h2>
-                        <p>Chuyên cung cấp các sản phẩm đèn trang trí cao cấp, đèn chùm pha lê, đèn cổ điển, đèn đồng...<br>
-                            Với thiết kế sang trọng, chất lượng vượt trội, chúng tôi tự hào mang đến cho bạn không gian sống lung linh và đẳng cấp.</p>
-                    </div>
-
-                     Featured Categories 
-                    <div class="featured-banner">
-                        <div class="featured-banner-item">
-                            <h3>💎 ĐÈN PHA LÊ</h3>
-                            <p>Sang trọng - Lộng lẫy</p>
-                        </div>
-                        <div class="featured-banner-item">
-                            <h3>🏛️ ĐÈN CỔ ĐIỂN</h3>
-                            <p>Tinh tế - Hoài cổ</p>
-                        </div>
-                        <div class="featured-banner-item">
-                            <h3>🪙 ĐÈN ĐỒNG</h3>
-                            <p>Cao cấp - Bền đẹp</p>
-                        </div>
-                    </div>-->
+                    <!--                    <div class="welcome">
+                                            <h2>🏠 Chào mừng đến với DecorLamp</h2>
+                                            <p>Chuyên cung cấp các sản phẩm đèn trang trí cao cấp, đèn chùm pha lê, đèn cổ điển, đèn đồng...<br>
+                                                Với thiết kế sang trọng, chất lượng vượt trội, chúng tôi tự hào mang đến cho bạn không gian sống lung linh và đẳng cấp.</p>
+                                        </div>
+                    
+                                         Featured Categories 
+                                        <div class="featured-banner">
+                                            <div class="featured-banner-item">
+                                                <h3>💎 ĐÈN PHA LÊ</h3>
+                                                <p>Sang trọng - Lộng lẫy</p>
+                                            </div>
+                                            <div class="featured-banner-item">
+                                                <h3>🏛️ ĐÈN CỔ ĐIỂN</h3>
+                                                <p>Tinh tế - Hoài cổ</p>
+                                            </div>
+                                            <div class="featured-banner-item">
+                                                <h3>🪙 ĐÈN ĐỒNG</h3>
+                                                <p>Cao cấp - Bền đẹp</p>
+                                            </div>
+                                        </div>-->
 
                     <div class="product-section">
                         <h3>🔥 SẢN PHẨM NỔI BẬT</h3>

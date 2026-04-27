@@ -21,7 +21,7 @@ import model.User;
  *
  * @author admin
  */
-@WebServlet(name = "AdminProductsServlet", urlPatterns = {"/AdminProductsServlet"})
+@WebServlet(name = "AdminProductsServlet", urlPatterns = {"/admin/products"})
 public class AdminProductsServlet extends HttpServlet {
 
     /**

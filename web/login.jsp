@@ -101,9 +101,9 @@
 <body>
     <div class="container">
         <!-- Banner -->
-        <div class="banner">
+<!--        <div class="banner">
             <img src="${pageContext.request.contextPath}/images/banner.jpg" alt="DecorLamp Banner" onerror="this.src='https://via.placeholder.com/1200x300?text=DecorLamp'">
-        </div>
+        </div>-->
 
         <!-- Top Menu -->
         <div class="top-menu">

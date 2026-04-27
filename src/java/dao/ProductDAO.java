@@ -182,4 +182,53 @@ public class ProductDAO {
         }
         return products;
     }
+    // Thêm sản phẩm
+
+    public boolean insert(Product p) throws ClassNotFoundException, SQLException {
+        String sql = "INSERT INTO products (name, price, image, description, tag, category_id) VALUES (?, ?, ?, ?, ?, ?)";
+        try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, p.getName());
+            ps.setDouble(2, p.getPrice());
+            ps.setString(3, p.getImage());
+            ps.setString(4, p.getDescription());
+            ps.setString(5, p.getTag());
+            ps.setInt(6, p.getCategoryId());
+            return ps.executeUpdate() > 0;
+        }
+    }
+
+// Cập nhật sản phẩm
+    public boolean update(Product p) throws ClassNotFoundException, SQLException {
+        String sql = "UPDATE products SET name = ?, price = ?, image = ?, description = ?, tag = ?, category_id = ? WHERE id = ?";
+        try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, p.getName());
+            ps.setDouble(2, p.getPrice());
+            ps.setString(3, p.getImage());
+            ps.setString(4, p.getDescription());
+            ps.setString(5, p.getTag());
+            ps.setInt(6, p.getCategoryId());
+            ps.setInt(7, p.getId());
+            return ps.executeUpdate() > 0;
+        }
+    }
+
+// Xóa sản phẩm
+    public boolean delete(int id) throws ClassNotFoundException, SQLException {
+        // Kiểm tra ràng buộc khóa ngoại
+        String checkSql = "SELECT COUNT(*) FROM order_items WHERE product_id = ?";
+        try (Connection conn = DBConnection.getConnection(); PreparedStatement psCheck = conn.prepareStatement(checkSql)) {
+            psCheck.setInt(1, id);
+            try (ResultSet rs = psCheck.executeQuery()) {
+                if (rs.next() && rs.getInt(1) > 0) {
+                    return false; // Có đơn hàng chứa sản phẩm này, không thể xóa
+                }
+            }
+        }
+
+        String sql = "DELETE FROM products WHERE id = ?";
+        try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            return ps.executeUpdate() > 0;
+        }
+    }
 }

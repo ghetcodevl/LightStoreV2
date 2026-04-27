@@ -23,10 +23,9 @@ import model.User;
  *
  * @author admin
  */
-@WebServlet(name = "CheckoutServlet", urlPatterns = {"/CheckoutServlet" , "/checkout"})
+@WebServlet(name = "CheckoutServlet", urlPatterns = {"/CheckoutServlet", "/checkout"})
 public class CheckoutServlet extends HttpServlet {
 
-   
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
@@ -56,8 +55,8 @@ public class CheckoutServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-         HttpSession session = request.getSession();
-        
+        HttpSession session = request.getSession();
+
         // Kiểm tra đăng nhập
         if (session.getAttribute("user") == null) {
             session.setAttribute("redirectAfterLogin", "/checkout");
@@ -65,7 +64,7 @@ public class CheckoutServlet extends HttpServlet {
             response.sendRedirect(request.getContextPath() + "/LoginServlet");
             return;
         }
-        
+
         // Kiểm tra giỏ hàng
         Map<Integer, Integer> cart = (Map<Integer, Integer>) session.getAttribute("cart");
         if (cart == null || cart.isEmpty()) {
@@ -73,13 +72,13 @@ public class CheckoutServlet extends HttpServlet {
             response.sendRedirect(request.getContextPath() + "/cart");
             return;
         }
-        
+
         // Lấy thông tin giỏ hàng
         try {
             ProductDAO productDAO = new ProductDAO();
             Map<Product, Integer> cartItems = new HashMap<>();
             double total = 0;
-            
+
             for (Map.Entry<Integer, Integer> entry : cart.entrySet()) {
                 Product product = productDAO.getById(entry.getKey());
                 if (product != null) {
@@ -87,52 +86,53 @@ public class CheckoutServlet extends HttpServlet {
                     total += product.getPrice() * entry.getValue();
                 }
             }
-            
+
             request.setAttribute("cartItems", cartItems);
             request.setAttribute("total", total);
-            
+
         } catch (Exception e) {
             e.printStackTrace();
         }
-        
+
         request.getRequestDispatcher("/checkout.jsp").forward(request, response);
     }
 
-    
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-       HttpSession session = request.getSession();
+        response.setContentType("text/html;charset=UTF-8");
+        request.setCharacterEncoding("UTF-8");
+        HttpSession session = request.getSession();
         User user = (User) session.getAttribute("user");
-        
+
         if (user == null) {
             response.sendRedirect(request.getContextPath() + "/LoginServlet");
             return;
         }
-        
+
         String fullName = request.getParameter("fullName");
         String phone = request.getParameter("phone");
         String address = request.getParameter("address");
         String note = request.getParameter("note");
-        
+
         // Validate
-        if (fullName == null || fullName.trim().isEmpty() ||
-            phone == null || phone.trim().isEmpty() ||
-            address == null || address.trim().isEmpty()) {
-            
+        if (fullName == null || fullName.trim().isEmpty()
+                || phone == null || phone.trim().isEmpty()
+                || address == null || address.trim().isEmpty()) {
+
             request.setAttribute("error", "Vui lòng điền đầy đủ thông tin giao hàng!");
             doGet(request, response);
             return;
         }
-        
+
         try {
             OrderDAO orderDAO = new OrderDAO();
             Map<Integer, Integer> cart = (Map<Integer, Integer>) session.getAttribute("cart");
-            
+
             boolean success = orderDAO.createOrder(
-                user.getId(), cart, fullName, phone, address, note
+                    user.getId(), cart, fullName, phone, address, note
             );
-            
+
             if (success) {
                 session.removeAttribute("cart");
                 session.setAttribute("orderSuccess", "Đặt hàng thành công!");
@@ -141,13 +141,11 @@ public class CheckoutServlet extends HttpServlet {
                 request.setAttribute("error", "Đặt hàng thất bại!");
                 doGet(request, response);
             }
-            
+
         } catch (Exception e) {
             e.printStackTrace();
             request.setAttribute("error", "Lỗi: " + e.getMessage());
             doGet(request, response);
         }
     }
-    }
-
-    
+}

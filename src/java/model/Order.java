@@ -26,7 +26,7 @@ public class Order {
         this.phone = phone;
         this.address = address;
         this.total = total;
-        this.status = status;
+//        this.status = status;
         this.orderDate = orderDate;
     }
     
@@ -52,8 +52,8 @@ public class Order {
     public double getTotal() { return total; }
     public void setTotal(double total) { this.total = total; }
     
-    public String getStatus() { return status; }
-    public void setStatus(String status) { this.status = status; }
+//    public String getStatus() { return status; }
+//    public void setStatus(String status) { this.status = status; }
     
     public Date getOrderDate() { return orderDate; }
     public void setOrderDate(Date orderDate) { this.orderDate = orderDate; }
