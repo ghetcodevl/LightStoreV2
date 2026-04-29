@@ -6,6 +6,7 @@
 <html lang="vi">
     <head>
         <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
         <title>${product.name} - DecorLamp</title>
         <link rel="stylesheet" href="${pageContext.request.contextPath}/style.css">
         <style>
@@ -157,41 +158,44 @@
                 <img src="${pageContext.request.contextPath}/images/banner.jpg" alt="DecorLamp Banner">
             </div>
 
-            <!-- Top Menu -->
+             <!-- Top Menu -->
             <div class="top-menu">
                 <ul>
+                    <li><a href="${pageContext.request.contextPath}/about">📖 Giới thiệu</a></li>
                     <li><a href="${pageContext.request.contextPath}/Home">🏠 Trang chủ</a></li>
                     <li><a href="${pageContext.request.contextPath}/products">✨ Sản phẩm</a></li>
                     <li><a href="${pageContext.request.contextPath}/contact">📞 Liên hệ</a></li>
                     <li><a href="${pageContext.request.contextPath}/cart">🛒 Giỏ hàng</a></li>
 
+                    <!-- FORM TÌM KIẾM - PHẢI ĐẶT TRONG THẺ LI -->
+                    <li style="margin: 0 15px; display: inline-block; list-style: none;">
+                        <form action="${pageContext.request.contextPath}/products" method="get" style="display: flex; align-items: center; margin: 0; padding: 0;">
+                            <input type="text" name="keyword" placeholder="🔍 Tìm kiếm sản phẩm..." value="${param.keyword}" 
+                                   style="padding: 8px 12px; border: 1px solid #ddd; border-radius: 25px 0 0 25px; outline: none; width: 200px; font-size: 13px; background: white;">
+                            <button type="submit" style="padding: 8px 15px; background: #b8860b; color: white; border: none; border-radius: 0 25px 25px 0; cursor: pointer; font-size: 13px;">
+                                Tìm
+                            </button>
+                        </form>
+                    </li>
+
                     <c:choose>
                         <c:when test="${not empty sessionScope.user}">
-                            <div class="right-menu">
-                                <li class="dropdown">
-                                    <a href="#" class="user-info">
-                                        <span class="user-avatar">
-                                            ${fn:substring(sessionScope.user.fullName, 0, 1)}
-                                        </span>
-                                        ${sessionScope.user.fullName}
-                                        <span style="margin-left: 5px;">▼</span>
-                                    </a>
-                                    <div class="dropdown-content">
-                                        <a href="${pageContext.request.contextPath}/profile">👤 Thông tin tài khoản</a>
-                                        <a href="${pageContext.request.contextPath}/my-orders">📦 Đơn hàng của tôi</a>
-                                        <a href="${pageContext.request.contextPath}/change-password">🔑 Đổi mật khẩu</a>
-                                        <a href="${pageContext.request.contextPath}/logout" style="color: #dc3545;">🚪 Đăng xuất</a>
-                                    </div>
-                                </li>
-                            </div>
-                        </c:when>
-                        <c:otherwise>
-                            <div class="right-menu">
-                                <li><a href="${pageContext.request.contextPath}/LoginServlet">🔐 Đăng nhập</a></li>
-                                <li><a href="${pageContext.request.contextPath}/register">📝 Đăng ký</a></li>
-                            </div>
-                        </c:otherwise>
-                    </c:choose>
+                            <c:if test="${sessionScope.user.role == 'admin'}">
+                                <li><a href="${pageContext.request.contextPath}/admin/dashboard">📊 Dashboard</a></li>
+                                </c:if>
+                            <!-- Đẩy các mục sang phải -->
+                            <li style="flex: 1;"></li>
+                            <!-- Đã đăng nhập -->
+                            <li><span class="user-name">👤 ${sessionScope.user.fullName}</span></li>
+                            <li><a href="#" onclick="confirmLogout(event)" class="logout-btn">🚪 Đăng xuất</a></li>
+                            </c:when>
+                            <c:otherwise>
+                            <li style="flex: 1;"></li>
+                            <!-- Chưa đăng nhập -->
+                            <li><a href="${pageContext.request.contextPath}/LoginServlet">🔐 Đăng nhập</a></li>
+                            <li><a href="${pageContext.request.contextPath}/register">📝 Đăng ký</a></li>
+                            </c:otherwise>
+                        </c:choose>
                 </ul>
             </div>
 
@@ -369,6 +373,7 @@
             </footer>
         </div>
 
-       
+         <!-- Include Chatbot -->
+        <jsp:include page="chatbot.jsp" />
     </body>
 </html>

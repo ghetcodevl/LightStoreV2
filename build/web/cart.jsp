@@ -3,28 +3,44 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <!DOCTYPE html>
 <html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <title>Giỏ hàng - DecorLamp</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/style.css">
-</head>
-<body>
-    <div class="container">
-<!--        <div class="banner">
-            <img src="${pageContext.request.contextPath}/images/banner.jpg" alt="DecorLamp Banner">
-        </div>-->
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+        <title>Giỏ hàng - DecorLamp</title>
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/style.css">
+    </head>
+    <body>
+        <div class="container">
+            <!--        <div class="banner">
+                        <img src="${pageContext.request.contextPath}/images/banner.jpg" alt="DecorLamp Banner">
+                    </div>-->
 
-         <!-- Top Menu -->
+            <!-- Top Menu -->
             <div class="top-menu">
                 <ul>
+                    <li><a href="${pageContext.request.contextPath}/about">📖 Giới thiệu</a></li>
                     <li><a href="${pageContext.request.contextPath}/Home">🏠 Trang chủ</a></li>
                     <li><a href="${pageContext.request.contextPath}/products">✨ Sản phẩm</a></li>
                     <li><a href="${pageContext.request.contextPath}/contact">📞 Liên hệ</a></li>
                     <li><a href="${pageContext.request.contextPath}/cart">🛒 Giỏ hàng</a></li>
 
+                    <!-- FORM TÌM KIẾM - PHẢI ĐẶT TRONG THẺ LI -->
+                    <li style="margin: 0 15px; display: inline-block; list-style: none;">
+                        <form action="${pageContext.request.contextPath}/products" method="get" style="display: flex; align-items: center; margin: 0; padding: 0;">
+                            <input type="text" name="keyword" placeholder="🔍 Tìm kiếm sản phẩm..." value="${param.keyword}" 
+                                   style="padding: 8px 12px; border: 1px solid #ddd; border-radius: 25px 0 0 25px; outline: none; width: 200px; font-size: 13px; background: white;">
+                            <button type="submit" style="padding: 8px 15px; background: #b8860b; color: white; border: none; border-radius: 0 25px 25px 0; cursor: pointer; font-size: 13px;">
+                                Tìm
+                            </button>
+                        </form>
+                    </li>
+
                     <c:choose>
                         <c:when test="${not empty sessionScope.user}">
-                            <!-- Thêm một li trống để đẩy các mục sang phải -->
+                            <c:if test="${sessionScope.user.role == 'admin'}">
+                                <li><a href="${pageContext.request.contextPath}/admin/dashboard">📊 Dashboard</a></li>
+                                </c:if>
+                            <!-- Đẩy các mục sang phải -->
                             <li style="flex: 1;"></li>
                             <!-- Đã đăng nhập -->
                             <li><span class="user-name">👤 ${sessionScope.user.fullName}</span></li>
@@ -41,8 +57,8 @@
             </div>
 
 
-        <div class="main-content">
-            <!-- Left Menu -->
+            <div class="main-content">
+                <!-- Left Menu -->
                 <div class="left-menu">
                     <div class="menu-title">Danh mục sản phẩm</div>
                     <ul>
@@ -59,83 +75,83 @@
                     </ul>
                 </div>
 
-            <div class="content">
-                <div class="content-title">GIỎ HÀNG CỦA BẠN</div>
+                <div class="content">
+                    <div class="content-title">GIỎ HÀNG CỦA BẠN</div>
 
-                <c:if test="${not empty sessionScope.cartMessage}">
-                    <div class="message message-success">${sessionScope.cartMessage}</div>
-                    <c:remove var="cartMessage" scope="session"/>
-                </c:if>
+                    <c:if test="${not empty sessionScope.cartMessage}">
+                        <div class="message message-success">${sessionScope.cartMessage}</div>
+                        <c:remove var="cartMessage" scope="session"/>
+                    </c:if>
 
-                <c:choose>
-                    <c:when test="${empty cartItems}">
-                        <div class="empty-cart">
-                            <p>🛒 Giỏ hàng của bạn đang trống!</p>
-                            <p><a href="${pageContext.request.contextPath}/products">Tiếp tục mua sắm</a></p>
-                        </div>
-                    </c:when>
-                    <c:otherwise>
-                        <form action="${pageContext.request.contextPath}/cart" method="post">
-                            <input type="hidden" name="action" value="update">
-                            <table class="cart-table">
-                                <thead>
-                                    <tr>
-                                        <th>Hình ảnh</th>
-                                        <th>Tên sản phẩm</th>
-                                        <th>Đơn giá</th>
-                                        <th>Số lượng</th>
-                                        <th>Thành tiền</th>
-                                        <th>Thao tác</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <c:forEach items="${cartItems}" var="item">
-                                        <c:set var="product" value="${item.key}"/>
-                                        <c:set var="quantity" value="${item.value}"/>
-                                        <c:set var="subtotal" value="${product.price * quantity}"/>
-                                        <tr>
-                                            <td>
-                                                <img src="${product.image}" alt="${product.name}" style="width: 60px; height: 60px; object-fit: cover;" onerror="this.src='${pageContext.request.contextPath}/images/no-image.jpg'">
-                                            </td>
-                                            <td>${product.name}</td>
-                                            <td><fmt:formatNumber value="${product.price}" pattern="#,##0"/> VNĐ</td>
-                                            <td>
-                                                <input type="hidden" name="productId" value="${product.id}">
-                                                <input type="number" name="quantity" value="${quantity}" min="0" style="width: 60px; padding: 5px;">
-                                            </td>
-                                            <td><fmt:formatNumber value="${subtotal}" pattern="#,##0"/> VNĐ</td>
-                                            <td>
-                                                <a href="${pageContext.request.contextPath}/cart?action=remove&productId=${product.id}" 
-                                                   onclick="return confirm('Bạn có chắc muốn xóa sản phẩm này?')"
-                                                   style="color: #dc3545; text-decoration: none;">Xóa</a>
-                                            </td>
-                                        </tr>
-                                    </c:forEach>
-                                </tbody>
-                                <tfoot>
-                                    <tr>
-                                        <td colspan="4" style="text-align: right;"><strong>Tổng cộng:</strong></td>
-                                        <td colspan="2"><strong><fmt:formatNumber value="${total}" pattern="#,##0"/> VNĐ</strong></td>
-                                    </tr>
-                                </tfoot>
-                            </table>
-                            
-                            <div style="margin-top: 20px; display: flex; justify-content: space-between;">
-                                <div>
-                                    <button type="submit" style="background-color: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">Cập nhật giỏ hàng</button>
-                                    <a href="${pageContext.request.contextPath}/cart?action=clear" 
-                                       onclick="return confirm('Bạn có chắc muốn xóa toàn bộ giỏ hàng?')"
-                                       style="background-color: #ffc107; color: #333; padding: 10px 20px; text-decoration: none; border-radius: 5px; margin-left: 10px;">Xóa tất cả</a>
-                                </div>
-                                <a href="${pageContext.request.contextPath}/checkout" 
-                                   style="background-color: #28a745; color: white; padding: 10px 30px; text-decoration: none; border-radius: 5px;">Thanh toán →</a>
+                    <c:choose>
+                        <c:when test="${empty cartItems}">
+                            <div class="empty-cart">
+                                <p>🛒 Giỏ hàng của bạn đang trống!</p>
+                                <p><a href="${pageContext.request.contextPath}/products">Tiếp tục mua sắm</a></p>
                             </div>
-                        </form>
-                    </c:otherwise>
-                </c:choose>
+                        </c:when>
+                        <c:otherwise>
+                            <form action="${pageContext.request.contextPath}/cart" method="post">
+                                <input type="hidden" name="action" value="update">
+                                <table class="cart-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Hình ảnh</th>
+                                            <th>Tên sản phẩm</th>
+                                            <th>Đơn giá</th>
+                                            <th>Số lượng</th>
+                                            <th>Thành tiền</th>
+                                            <th>Thao tác</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <c:forEach items="${cartItems}" var="item">
+                                            <c:set var="product" value="${item.key}"/>
+                                            <c:set var="quantity" value="${item.value}"/>
+                                            <c:set var="subtotal" value="${product.price * quantity}"/>
+                                            <tr>
+                                                <td>
+                                                    <img src="${product.image}" alt="${product.name}" style="width: 60px; height: 60px; object-fit: cover;" onerror="this.src='${pageContext.request.contextPath}/images/no-image.jpg'">
+                                                </td>
+                                                <td>${product.name}</td>
+                                                <td><fmt:formatNumber value="${product.price}" pattern="#,##0"/> VNĐ</td>
+                                                <td>
+                                                    <input type="hidden" name="productId" value="${product.id}">
+                                                    <input type="number" name="quantity" value="${quantity}" min="0" style="width: 60px; padding: 5px;">
+                                                </td>
+                                                <td><fmt:formatNumber value="${subtotal}" pattern="#,##0"/> VNĐ</td>
+                                                <td>
+                                                    <a href="${pageContext.request.contextPath}/cart?action=remove&productId=${product.id}" 
+                                                       onclick="return confirm('Bạn có chắc muốn xóa sản phẩm này?')"
+                                                       style="color: #dc3545; text-decoration: none;">Xóa</a>
+                                                </td>
+                                            </tr>
+                                        </c:forEach>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <td colspan="4" style="text-align: right;"><strong>Tổng cộng:</strong></td>
+                                            <td colspan="2"><strong><fmt:formatNumber value="${total}" pattern="#,##0"/> VNĐ</strong></td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+
+                                <div style="margin-top: 20px; display: flex; justify-content: space-between;">
+                                    <div>
+                                        <button type="submit" style="background-color: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">Cập nhật giỏ hàng</button>
+                                        <a href="${pageContext.request.contextPath}/cart?action=clear" 
+                                           onclick="return confirm('Bạn có chắc muốn xóa toàn bộ giỏ hàng?')"
+                                           style="background-color: #ffc107; color: #333; padding: 10px 20px; text-decoration: none; border-radius: 5px; margin-left: 10px;">Xóa tất cả</a>
+                                    </div>
+                                    <a href="${pageContext.request.contextPath}/checkout" 
+                                       style="background-color: #28a745; color: white; padding: 10px 30px; text-decoration: none; border-radius: 5px;">Thanh toán →</a>
+                                </div>
+                            </form>
+                        </c:otherwise>
+                    </c:choose>
+                </div>
             </div>
-        </div>
- <!-- Footer -->
+            <!-- Footer -->
             <footer class="footer">
                 <div class="footer-container">
                     <div class="footer-row">
@@ -211,15 +227,17 @@
                         <p>© 2024 DecorLamp. All rights reserved. Designed by YourTeam</p>
                         <p>Nhóm thực hiện: Đặng Minh Quốc (01/01/2005), Lại Thế Trường (02/02/2005), Lê Anh Tuấn (03/03/2005)</p>
                     </div>
-    </div>
+                </div>
 
-    <script>
-    function confirmLogout(event) {
-        event.preventDefault();
-        if (confirm('Bạn có chắc chắn muốn đăng xuất?')) {
-            window.location.href = '${pageContext.request.contextPath}/logout';
-        }
-    }
-    </script>
-</body>
-</html>
+                <script>
+                    function confirmLogout(event) {
+                        event.preventDefault();
+                        if (confirm('Bạn có chắc chắn muốn đăng xuất?')) {
+                            window.location.href = '${pageContext.request.contextPath}/logout';
+                        }
+                    }
+                </script>
+                <!-- Include Chatbot -->
+                <jsp:include page="chatbot.jsp" />
+                </body>
+                </html>

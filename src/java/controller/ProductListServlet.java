@@ -22,7 +22,6 @@ import model.Product;
 @WebServlet(name = "ProductListServlet", urlPatterns = {"/ProductListServlet", "/products"})
 public class ProductListServlet extends HttpServlet {
 
-   
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
@@ -40,7 +39,6 @@ public class ProductListServlet extends HttpServlet {
         }
     }
 
-   
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -77,57 +75,100 @@ public class ProductListServlet extends HttpServlet {
 //            e.printStackTrace();
 //            response.sendRedirect("index.jsp");
 //        }
-        
+             response.setContentType("text/html;charset=UTF-8");
+             request.setCharacterEncoding("UTF-8");
           try {
             ProductDAO dao = new ProductDAO();
             String categoryId = request.getParameter("category");
             String tag = request.getParameter("tag");
+            String keyword = request.getParameter("keyword");
             
-            List<Product> list = null;
+            // Xử lý phân trang
+            int page = 1;
+            int pageSize = 12;
+            String pageParam = request.getParameter("page");
+            if (pageParam != null && !pageParam.isEmpty()) {
+                try {
+                    page = Integer.parseInt(pageParam);
+                } catch (NumberFormatException e) {}
+            }
+            int offset = (page - 1) * pageSize;
+            
+            List<Product> list;
+            int totalProducts;
             String title = "Tất cả sản phẩm";
             
-            if (categoryId != null && !categoryId.isEmpty()) {
-                list = dao.getByCategory(Integer.parseInt(categoryId));
+            if (keyword != null && !keyword.trim().isEmpty()) {
+                // Tìm kiếm thông minh
+                keyword = keyword.trim();
+                list = dao.searchProducts(keyword, offset, pageSize);
+                totalProducts = dao.countSearchProducts(keyword);
+                title = "Kết quả tìm kiếm: " + keyword;
+                
+                // Lấy gợi ý nếu không có kết quả
+                if (list.isEmpty()) {
+                    List<String> suggestions = dao.getSearchSuggestions(keyword);
+                    request.setAttribute("suggestions", suggestions);
+                }
+                
+                request.setAttribute("keyword", keyword);
+                
+            } else if (categoryId != null && !categoryId.isEmpty()) {
+                list = dao.getProductsWithPagination(offset, pageSize, categoryId, null);
+                totalProducts = dao.countProducts(categoryId, null);
                 title = getCategoryName(Integer.parseInt(categoryId));
+                
             } else if (tag != null && !tag.isEmpty()) {
-                list = dao.getByTag(tag);
-                switch(tag) {
+                list = dao.getProductsWithPagination(offset, pageSize, null, tag);
+                totalProducts = dao.countProducts(null, tag);
+                switch (tag) {
                     case "new": title = "Hàng mới"; break;
                     case "bestseller": title = "Bán chạy"; break;
                     case "sale": title = "Giảm giá"; break;
-                    default: title = "Sản phẩm nổi bật";
                 }
             } else {
-                list = dao.getAll();
+                list = dao.getProductsWithPagination(offset, pageSize, null, null);
+                totalProducts = dao.countProducts(null, null);
             }
+            
+            int totalPages = (int) Math.ceil((double) totalProducts / pageSize);
             
             request.setAttribute("listP", list);
             request.setAttribute("title", title);
-            request.getRequestDispatcher("/products.jsp").forward(request, response);
+            request.setAttribute("currentPage", page);
+            request.setAttribute("totalPages", totalPages);
+            request.setAttribute("categoryFilter", categoryId);
+            request.setAttribute("tagFilter", tag);
+            
         } catch (Exception e) {
             e.printStackTrace();
             response.sendRedirect(request.getContextPath() + "/Home");
         }
-    
+        
+        request.getRequestDispatcher("/products.jsp").forward(request, response);
     }
-     
+
     private String getCategoryName(int id) {
-        switch(id) {
-            case 1: return "Đèn Chùm Pha Lê";
-            case 2: return "Đèn chùm cổ điển";
-            case 3: return "Đèn chùm Đồng";
-            case 4: return "Đèn chùm phòng khách";
-            default: return "Sản phẩm";
+        switch (id) {
+            case 1:
+                return "Đèn Chùm Pha Lê";
+            case 2:
+                return "Đèn Chùm Cổ Điển";
+            case 3:
+                return "Đèn Chùm Đồng";
+            case 4:
+                return "Đèn Thả Trần";
+            default:
+                return "Sản phẩm";
         }
     }
- 
+
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         doGet(request, response);
     }
 
-    
     @Override
     public String getServletInfo() {
         return "Short description";

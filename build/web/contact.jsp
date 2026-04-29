@@ -6,6 +6,7 @@
 <html lang="vi">
     <head>
         <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
         <title>Liên hệ - DecorLamp</title>
         <link rel="stylesheet" href="style.css">
     </head>
@@ -16,17 +17,31 @@
             </div>-->
 
             <!-- Top Menu -->
-             <!-- Top Menu -->
             <div class="top-menu">
                 <ul>
+                    <li><a href="${pageContext.request.contextPath}/about">📖 Giới thiệu</a></li>
                     <li><a href="${pageContext.request.contextPath}/Home">🏠 Trang chủ</a></li>
                     <li><a href="${pageContext.request.contextPath}/products">✨ Sản phẩm</a></li>
                     <li><a href="${pageContext.request.contextPath}/contact">📞 Liên hệ</a></li>
                     <li><a href="${pageContext.request.contextPath}/cart">🛒 Giỏ hàng</a></li>
 
+                    <!-- FORM TÌM KIẾM - PHẢI ĐẶT TRONG THẺ LI -->
+                    <li style="margin: 0 15px; display: inline-block; list-style: none;">
+                        <form action="${pageContext.request.contextPath}/products" method="get" style="display: flex; align-items: center; margin: 0; padding: 0;">
+                            <input type="text" name="keyword" placeholder="🔍 Tìm kiếm sản phẩm..." value="${param.keyword}" 
+                                   style="padding: 8px 12px; border: 1px solid #ddd; border-radius: 25px 0 0 25px; outline: none; width: 200px; font-size: 13px; background: white;">
+                            <button type="submit" style="padding: 8px 15px; background: #b8860b; color: white; border: none; border-radius: 0 25px 25px 0; cursor: pointer; font-size: 13px;">
+                                Tìm
+                            </button>
+                        </form>
+                    </li>
+
                     <c:choose>
                         <c:when test="${not empty sessionScope.user}">
-                            <!-- Thêm một li trống để đẩy các mục sang phải -->
+                            <c:if test="${sessionScope.user.role == 'admin'}">
+                                <li><a href="${pageContext.request.contextPath}/admin/dashboard">📊 Dashboard</a></li>
+                                </c:if>
+                            <!-- Đẩy các mục sang phải -->
                             <li style="flex: 1;"></li>
                             <!-- Đã đăng nhập -->
                             <li><span class="user-name">👤 ${sessionScope.user.fullName}</span></li>
@@ -176,5 +191,7 @@
                         <p>Nhóm thực hiện: Đặng Minh Quốc (01/01/2005), Lại Thế Trường (02/02/2005), Lê Anh Tuấn (03/03/2005)</p>
                     </div>
         </div>
+                                 <!-- Include Chatbot -->
+        <jsp:include page="chatbot.jsp" />
     </body>
 </html>

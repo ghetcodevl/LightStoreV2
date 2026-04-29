@@ -15,6 +15,7 @@
 <html lang="vi">
     <head>
         <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
         <title>Admin Dashboard - DecorLamp</title>
         <link rel="stylesheet" href="${pageContext.request.contextPath}/style.css">
         <!-- Chart.js CDN cho biểu đồ -->
