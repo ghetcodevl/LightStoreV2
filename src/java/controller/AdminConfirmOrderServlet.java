@@ -19,7 +19,7 @@ import model.User;
  *
  * @author admin
  */
-@WebServlet(name = "AdminConfirmOrderServlet", urlPatterns = {"/AdminConfirmOrderServlet"})
+@WebServlet(name = "AdminConfirmOrderServlet", urlPatterns = {"/AdminConfirmOrderServlet" , "/admin/confirmOrder"})
 public class AdminConfirmOrderServlet extends HttpServlet {
 
     /**
@@ -97,7 +97,7 @@ public class AdminConfirmOrderServlet extends HttpServlet {
             session.setAttribute("errorMessage", "Lỗi: " + e.getMessage());
         }
         
-        response.sendRedirect(request.getContextPath() + "/admin/orders");
+          request.getRequestDispatcher("/admin/orders.jsp").forward(request, response);
     
     }
 

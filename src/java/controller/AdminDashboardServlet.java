@@ -1,4 +1,4 @@
-package controller.admin;
+package controller;
 
 import dao.OrderDAO;
 import dao.ProductDAO;
@@ -22,8 +22,6 @@ public class AdminDashboardServlet extends HttpServlet {
             throws ServletException, IOException {
         
         HttpSession session = request.getSession(false);
-        
-        // Kiểm tra đăng nhập admin
         if (session == null || session.getAttribute("user") == null) {
             response.sendRedirect(request.getContextPath() + "/LoginServlet");
             return;
@@ -40,33 +38,17 @@ public class AdminDashboardServlet extends HttpServlet {
             ProductDAO productDAO = new ProductDAO();
             UserDAO userDAO = new UserDAO();
             
-            // ========== LẤY SỐ LIỆU THỰC TẾ ==========
-            
-            // 1. Tổng số đơn hàng
+            // Thống kê số lượng
             int totalOrders = orderDAO.countAllOrders();
-            
-            // 2. Tổng doanh thu
             double totalRevenue = orderDAO.getTotalRevenue();
-            
-            // 3. Đơn hàng chờ xác nhận
             int pendingOrders = orderDAO.countOrdersByStatus("pending");
-            
-            // 4. Đơn hàng đã giao
             int deliveredOrders = orderDAO.countOrdersByStatus("delivered");
+            int totalProducts = productDAO.countAll();
+            int totalUsers = userDAO.countAll();
             
-            // 5. Thống kê theo tuần (cho biểu đồ)
-            List<Object[]> weeklyStats = orderDAO.getWeeklyStats();
-            List<Object[]> monthlyStats = orderDAO.getMonthlyStats();
-            List<Object[]> yearlyStats = orderDAO.getYearlyStats();
-            
-            // 6. Lấy danh sách đơn hàng (phân trang)
+            // ===== QUAN TRỌNG: Lấy danh sách đơn hàng gần đây =====
             int page = 1;
             int pageSize = 10;
-            String pageParam = request.getParameter("page");
-            if (pageParam != null && !pageParam.isEmpty()) {
-                page = Integer.parseInt(pageParam);
-            }
-            
             String status = request.getParameter("status");
             String keyword = request.getParameter("keyword");
             
@@ -74,66 +56,31 @@ public class AdminDashboardServlet extends HttpServlet {
             int totalOrdersFiltered = orderDAO.countOrdersFiltered(status, keyword);
             int totalPages = (int) Math.ceil((double) totalOrdersFiltered / pageSize);
             
-            // ========== TẠO DỮ LIỆU JSON CHO BIỂU ĐỒ ==========
-            // Chuyển đổi dữ liệu từ database sang định dạng chartData
-            
-            // Dữ liệu tuần (mặc định 7 ngày)
-            String[] weekLabels = {"Thứ 2", "Thứ 3", "Thứ 4", "Thứ 5", "Thứ 6", "Thứ 7", "CN"};
-            int[] weekData = new int[7];
-            for (Object[] stat : weeklyStats) {
-                String day = (String) stat[0];
-                int count = (int) stat[1];
-                // Map ngày từ database sang thứ
-                for (int i = 0; i < weekLabels.length; i++) {
-                    if (weekLabels[i].equalsIgnoreCase(day)) {
-                        weekData[i] = count;
-                        break;
-                    }
-                }
-            }
-            
-            // Dữ liệu tháng (4 tuần)
-            String[] monthLabels = {"Tuần 1", "Tuần 2", "Tuần 3", "Tuần 4"};
-            int[] monthData = new int[4];
-            for (int i = 0; i < monthlyStats.size() && i < 4; i++) {
-                monthData[i] = (int) monthlyStats.get(i)[1];
-            }
-            
-            // Dữ liệu năm (12 tháng)
-            String[] yearLabels = {"T1", "T2", "T3", "T4", "T5", "T6", "T7", "T8", "T9", "T10", "T11", "T12"};
-            int[] yearData = new int[12];
-            for (Object[] stat : yearlyStats) {
-                int month = (int) stat[0]; // Tháng 1-12
-                int count = (int) stat[1];
-                if (month >= 1 && month <= 12) {
-                    yearData[month - 1] = count;
-                }
-            }
-            
-            // Tạo JSON string cho biểu đồ
-            String chartDataJson = String.format(
-                "{week:{labels:%s, data:%s}, month:{labels:%s, data:%s}, year:{labels:%s, data:%s}}",
-                arrayToJson(weekLabels), arrayToJson(weekData),
-                arrayToJson(monthLabels), arrayToJson(monthData),
-                arrayToJson(yearLabels), arrayToJson(yearData)
-            );
-            
-            // ========== SET ATTRIBUTES ==========
+            // Set attributes để JSP nhận
             request.setAttribute("totalOrders", totalOrders);
             request.setAttribute("totalRevenue", totalRevenue);
             request.setAttribute("pendingOrders", pendingOrders);
             request.setAttribute("deliveredOrders", deliveredOrders);
-            request.setAttribute("orderList", orderList);
+            request.setAttribute("totalProducts", totalProducts);
+            request.setAttribute("totalUsers", totalUsers);
+            request.setAttribute("orderList", orderList);      // ← QUAN TRỌNG
             request.setAttribute("currentPage", page);
             request.setAttribute("totalPages", totalPages);
-            request.setAttribute("chartDataJson", chartDataJson);
+            
+            // Dữ liệu cho biểu đồ
+            List<Object[]> weeklyStats = orderDAO.getWeeklyStats();
+            List<Object[]> monthlyStats = orderDAO.getMonthlyStats();
+            List<Object[]> yearlyStats = orderDAO.getYearlyStats();
+            
+            request.setAttribute("weeklyStats", weeklyStats);
+            request.setAttribute("monthlyStats", monthlyStats);
+            request.setAttribute("yearlyStats", yearlyStats);
             
         } catch (Exception e) {
             e.printStackTrace();
             request.setAttribute("error", "Lỗi tải dữ liệu: " + e.getMessage());
         }
         
-        // Forward đến dashboard.jsp (giữ nguyên form của bạn)
         request.getRequestDispatcher("/dashboard.jsp").forward(request, response);
     }
     

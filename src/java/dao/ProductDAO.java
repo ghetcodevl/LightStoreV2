@@ -213,24 +213,40 @@ public class ProductDAO {
     }
 
 // Xóa sản phẩm
+//    public boolean delete(int id) throws ClassNotFoundException, SQLException {
+//        // Kiểm tra ràng buộc khóa ngoại
+//        String checkSql = "SELECT COUNT(*) FROM order_items WHERE product_id = ?";
+//        try (Connection conn = DBConnection.getConnection(); PreparedStatement psCheck = conn.prepareStatement(checkSql)) {
+//            psCheck.setInt(1, id);
+//            try (ResultSet rs = psCheck.executeQuery()) {
+//                if (rs.next() && rs.getInt(1) > 0) {
+//                    return false; // Có đơn hàng chứa sản phẩm này, không thể xóa
+//                }
+//            }
+//        }
+//
+//        String sql = "DELETE FROM products WHERE id = ?";
+//        try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+//            ps.setInt(1, id);
+//            return ps.executeUpdate() > 0;
+//        }
+//    }
     public boolean delete(int id) throws ClassNotFoundException, SQLException {
-        // Kiểm tra ràng buộc khóa ngoại
-        String checkSql = "SELECT COUNT(*) FROM order_items WHERE product_id = ?";
-        try (Connection conn = DBConnection.getConnection(); PreparedStatement psCheck = conn.prepareStatement(checkSql)) {
-            psCheck.setInt(1, id);
-            try (ResultSet rs = psCheck.executeQuery()) {
-                if (rs.next() && rs.getInt(1) > 0) {
-                    return false; // Có đơn hàng chứa sản phẩm này, không thể xóa
-                }
-            }
-        }
-
-        String sql = "DELETE FROM products WHERE id = ?";
-        try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, id);
-            return ps.executeUpdate() > 0;
-        }
+    System.out.println("ProductDAO.delete() called with ID: " + id);
+    
+    String sql = "DELETE FROM products WHERE id = ?";
+    try (Connection conn = DBConnection.getConnection();
+         PreparedStatement ps = conn.prepareStatement(sql)) {
+        ps.setInt(1, id);
+        int result = ps.executeUpdate();
+        System.out.println("Delete result: " + result);
+        return result > 0;
+    } catch (SQLException e) {
+        System.out.println("SQL Error: " + e.getMessage());
+        e.printStackTrace();
+        throw e;
     }
+}
 
     // Lấy sản phẩm có phân trang và lọc
     public List<Product> getProductsWithPagination(int offset, int limit, String categoryId, String tag)

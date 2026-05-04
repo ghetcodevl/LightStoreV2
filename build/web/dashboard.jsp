@@ -278,7 +278,7 @@
                     <ul>
                         <li><a href="${pageContext.request.contextPath}/admin/dashboard">📊 Dashboard</a></li>
                         <li><a href="${pageContext.request.contextPath}/admin/orders">📦 Đơn hàng</a></li>
-                        <li><a href="${pageContext.request.contextPath}/admin/products.jsp">🛍️ Sản phẩm</a></li>
+                        <li><a href="${pageContext.request.contextPath}/admin/products">🛍️ Sản phẩm</a></li>
                         <li><a href="${pageContext.request.contextPath}/admin/customers">👥 Khách hàng</a></li>
                         <li><a href="${pageContext.request.contextPath}/admin/categories">📁 Danh mục</a></li>
                         <li><a href="${pageContext.request.contextPath}/admin/reports">📈 Thống kê</a></li>
@@ -326,7 +326,7 @@
                         <div class="orders-section">
                             <div class="orders-header">
                                 <h3>📋 Đơn hàng gần đây</h3>
-                                <form class="filter-form" action="${pageContext.request.contextPath}/admin/dashboard" method="get">
+                                <form class="filter-form" action="${pageContext.request.contextPath}/admin/orders" method="get">
                                     <select name="status">
                                         <option value="">Tất cả trạng thái</option>
                                         <option value="pending" ${param.status == 'pending' ? 'selected' : ''}>Chờ xác nhận</option>
@@ -518,7 +518,7 @@
                                     y: {
                                     beginAtZero: true,
                                             title: { display: true, text: 'Số đơn hàng' }
-                                    },
+                                    },f
                                             x: {
                                             title: { display: true, text: range === 'week' ? 'Ngày trong tuần' : (range === 'month' ? 'Tuần' : 'Tháng') }
                                             }

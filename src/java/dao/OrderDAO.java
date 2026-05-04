@@ -203,60 +203,63 @@ public class OrderDAO {
         return 0;
     }
 
-    // Lấy danh sách đơn hàng có phân trang
-    public List<Order> getOrdersPaginated(int page, int pageSize, String status, String keyword) 
-            throws ClassNotFoundException, SQLException {
-        List<Order> orders = new ArrayList<>();
-        int offset = (page - 1) * pageSize;
-        
-        StringBuilder sql = new StringBuilder(
-            "SELECT o.*, u.full_name as customer_name FROM orders o " +
-            "LEFT JOIN users u ON o.user_id = u.id WHERE 1=1 "
-        );
-        
-        List<Object> params = new ArrayList<>();
-        
-        if (status != null && !status.isEmpty()) {
-            sql.append(" AND o.status = ?");
-            params.add(status);
-        }
-        
-        if (keyword != null && !keyword.isEmpty()) {
-            sql.append(" AND (o.id LIKE ? OR u.full_name LIKE ? OR o.phone LIKE ?)");
-            params.add("%" + keyword + "%");
-            params.add("%" + keyword + "%");
-            params.add("%" + keyword + "%");
-        }
-        
-        sql.append(" ORDER BY o.created_at DESC LIMIT ? OFFSET ?");
-        params.add(pageSize);
-        params.add(offset);
-        
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql.toString())) {
-            
-            for (int i = 0; i < params.size(); i++) {
-                ps.setObject(i + 1, params.get(i));
-            }
-            
-            try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    Order order = new Order();
-                    order.setId(rs.getInt("id"));
-                    order.setUserId(rs.getInt("user_id"));
-                    order.setCustomerName(rs.getString("customer_name"));
-                    order.setPhone(rs.getString("phone"));
-                    order.setAddress(rs.getString("address"));
-                    order.setNote(rs.getString("note"));
-                    order.setTotal(rs.getDouble("total"));
-//                    order.setStatus(rs.getString("status"));
-                    order.setOrderDate(rs.getTimestamp("created_at"));
-                    orders.add(order);
-                }
-            }
-        }
-        return orders;
+  // Lấy danh sách đơn hàng có phân trang
+public List<Order> getOrdersPaginated(int page, int pageSize, String status, String keyword) 
+        throws ClassNotFoundException, SQLException {
+    List<Order> orders = new ArrayList<>();
+    int offset = (page - 1) * pageSize;
+    
+    StringBuilder sql = new StringBuilder(
+        "SELECT o.*, u.full_name as customer_name FROM orders o " +
+        "LEFT JOIN users u ON o.user_id = u.id WHERE 1=1 "
+    );
+    
+    List<Object> params = new ArrayList<>();
+    
+    if (status != null && !status.isEmpty()) {
+        sql.append(" AND o.status = ?");
+        params.add(status);
     }
+    
+    if (keyword != null && !keyword.isEmpty()) {
+        sql.append(" AND (o.id LIKE ? OR u.full_name LIKE ? OR o.phone LIKE ?)");
+        params.add("%" + keyword + "%");
+        params.add("%" + keyword + "%");
+        params.add("%" + keyword + "%");
+    }
+    
+    sql.append(" ORDER BY o.created_at DESC LIMIT ? OFFSET ?");
+    params.add(pageSize);
+    params.add(offset);
+    
+    System.out.println("SQL: " + sql.toString()); // Debug
+    
+    try (Connection conn = DBConnection.getConnection();
+         PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+        
+        for (int i = 0; i < params.size(); i++) {
+            ps.setObject(i + 1, params.get(i));
+        }
+        
+        try (ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                Order order = new Order();
+                order.setId(rs.getInt("id"));
+                order.setUserId(rs.getInt("user_id"));
+                order.setCustomerName(rs.getString("customer_name"));
+                order.setPhone(rs.getString("phone"));
+                order.setAddress(rs.getString("address"));
+                order.setNote(rs.getString("note"));
+                order.setTotal(rs.getDouble("total"));
+                order.setOrderDate(rs.getTimestamp("created_at"));
+                orders.add(order);
+                System.out.println("Found order ID: " + order.getId()); // Debug
+            }
+        }
+    }
+    System.out.println("Total orders found: " + orders.size()); // Debug
+    return orders;
+}
 
     // Cập nhật trạng thái đơn hàng
     public boolean updateOrderStatus(int orderId, String status) throws ClassNotFoundException, SQLException {
