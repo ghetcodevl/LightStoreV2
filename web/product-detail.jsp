@@ -9,6 +9,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
         <title>${product.name} - DecorLamp</title>
         <link rel="stylesheet" href="${pageContext.request.contextPath}/style.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
         <style>
             .product-detail-container {
                 display: flex;
@@ -149,55 +150,162 @@
                 color: #721c24;
                 border: 1px solid #f5c6cb;
             }
+             :root {
+                --primary-color: #c0392b;      /* Màu đỏ đậm sang trọng */
+                --primary-dark: #a93226;
+                --primary-light: #e74c3c;
+                --text-dark: #1a1a1a;
+                --text-gray: #555;
+                --text-light: #888;
+                --bg-gray: #f8f8f8;
+                --border-color: #e0e0e0;
+                --white: #ffffff;
+                --font-main: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+                --font-price: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            }
+
+            .main-menu {
+                background: var(--text-dark);
+            }
+            .main-menu ul {
+                list-style: none;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                padding: 0 25px;
+                margin: 0;
+                flex-wrap: wrap;
+            }
+            .main-menu li a {
+                display: block;
+                color: var(--white);
+                padding: 15px 25px;
+                text-decoration: none;
+                font-size: 14px;
+                font-weight: 500;
+                text-transform: uppercase;
+                transition: 0.3s;
+            }
+            .main-menu li a:hover {
+                background: var(--primary-color);
+            }
+
+            /* ========== SEARCH FORM ========== */
+            .search-form {
+                display: flex;
+                align-items: center;
+                margin-left: 190px;
+            }
+            .search-form input {
+                padding: 8px 12px;
+                border: none;
+                border-radius: 25px 0 0 25px;
+                outline: none;
+                width: 280px;
+            }
+            .search-form button {
+                padding: 8px 15px;
+                background: var(--primary-color);
+                color: white;
+                border: none;
+                border-radius: 0 25px 25px 0;
+                cursor: pointer;
+                transition: 0.3s;
+            }
+            .search-form button:hover {
+                background: var(--primary-dark);
+            }
+
+            .search-item {
+                margin: 0 10px;
+                display: inline-block;
+                vertical-align: middle;
+            }
+
+            .search-form-header {
+                display: flex;
+                align-items: center;
+                margin: 0 15px;
+            }
+            .search-form-header input {
+                padding: 8px 12px;
+                border: 1px solid #ddd;
+                border-radius: 25px 0 0 25px;
+                outline: none;
+                width: 200px;
+                font-size: 13px;
+                background: #fff;
+            }
+            .search-form-header button {
+                padding: 8px 15px;
+                background: #b8860b;
+                color: white;
+                border: none;
+                border-radius: 0 25px 25px 0;
+                cursor: pointer;
+                font-size: 13px;
+                transition: background 0.3s;
+            }
+            .search-form-header button:hover {
+                background: #9a7209;
+            }
+
+            .cart-info {
+                margin-left: auto;
+                display: flex;
+                align-items: center;
+            }
+            .cart-info a {
+                color: white;
+                text-decoration: none;
+                margin: 0 10px;
+            } 
         </style>
     </head>
     <body>
         <div class="container">
-            <!-- Banner -->
-            <div class="banner">
-                <img src="${pageContext.request.contextPath}/images/banner.jpg" alt="DecorLamp Banner">
-            </div>
-
-             <!-- Top Menu -->
-            <div class="top-menu">
+            <div class="main-menu">
                 <ul>
-                    <li><a href="${pageContext.request.contextPath}/about">📖 Giới thiệu</a></li>
-                    <li><a href="${pageContext.request.contextPath}/Home">🏠 Trang chủ</a></li>
-                    <li><a href="${pageContext.request.contextPath}/products">✨ Sản phẩm</a></li>
-                    <li><a href="${pageContext.request.contextPath}/contact">📞 Liên hệ</a></li>
-                    <li><a href="${pageContext.request.contextPath}/cart">🛒 Giỏ hàng</a></li>
+<!--                    <li><a href="${pageContext.request.contextPath}/about">Giới thiệu</a></li>-->
+                    <li><a href="${pageContext.request.contextPath}/Home">Trang chủ</a></li>
+                    <li><a href="${pageContext.request.contextPath}/products">Sản phẩm</a></li>
+                    <li><a href="${pageContext.request.contextPath}/contact">Liên hệ</a></li>
+                    <li><a href="${pageContext.request.contextPath}/cart">Giỏ hàng</a></li>
 
-                    <!-- FORM TÌM KIẾM - PHẢI ĐẶT TRONG THẺ LI -->
-                    <li style="margin: 0 15px; display: inline-block; list-style: none;">
-                        <form action="${pageContext.request.contextPath}/products" method="get" style="display: flex; align-items: center; margin: 0; padding: 0;">
-                            <input type="text" name="keyword" placeholder="🔍 Tìm kiếm sản phẩm..." value="${param.keyword}" 
-                                   style="padding: 8px 12px; border: 1px solid #ddd; border-radius: 25px 0 0 25px; outline: none; width: 200px; font-size: 13px; background: white;">
-                            <button type="submit" style="padding: 8px 15px; background: #b8860b; color: white; border: none; border-radius: 0 25px 25px 0; cursor: pointer; font-size: 13px;">
-                                Tìm
-                            </button>
+                    <li class="search-form">
+                        <form action="${pageContext.request.contextPath}/products" method="get" style="display: flex;">
+                            <input type="text" name="keyword" placeholder="Tìm kiếm sản phẩm..." value="${param.keyword}">
+                            <button type="submit"><i class="fas fa-search"></i></button>
                         </form>
                     </li>
 
-                    <c:choose>
-                        <c:when test="${not empty sessionScope.user}">
-                            <c:if test="${sessionScope.user.role == 'admin'}">
-                                <li><a href="${pageContext.request.contextPath}/admin/dashboard">📊 Dashboard</a></li>
+                    <div class="cart-info">
+                        <c:choose>
+                            <c:when test="${not empty sessionScope.user}">
+                                <c:if test="${sessionScope.user.role == 'admin'}">
+                                    <a href="${pageContext.request.contextPath}/admin/dashboard">DASH BOARD</a>
                                 </c:if>
-                            <!-- Đẩy các mục sang phải -->
-                            <li style="flex: 1;"></li>
-                            <!-- Đã đăng nhập -->
-                            <li><span class="user-name">👤 ${sessionScope.user.fullName}</span></li>
-                            <li><a href="#" onclick="confirmLogout(event)" class="logout-btn">🚪 Đăng xuất</a></li>
+                                <a href="#" class="user-name"><i class="fas fa-user"></i> ${sessionScope.user.fullName}</a>
+                                <a href="#" onclick="confirmLogout(event)" class="logout-btn">Đăng xuất</a>
                             </c:when>
                             <c:otherwise>
-                            <li style="flex: 1;"></li>
-                            <!-- Chưa đăng nhập -->
-                            <li><a href="${pageContext.request.contextPath}/LoginServlet">🔐 Đăng nhập</a></li>
-                            <li><a href="${pageContext.request.contextPath}/register">📝 Đăng ký</a></li>
+                                <a href="${pageContext.request.contextPath}/LoginServlet">Đăng nhập</a>
+                                <a href="${pageContext.request.contextPath}/register">Đăng ký</a>
                             </c:otherwise>
                         </c:choose>
+                    </div>
+
                 </ul>
             </div>
+
+            <script>
+                function confirmLogout(event) {
+                    event.preventDefault();
+                    if (confirm('Bạn có chắc chắn muốn đăng xuất?')) {
+                        window.location.href = '${pageContext.request.contextPath}/logout';
+                    }
+                }
+            </script>
 
             <div class="main-content">
                 <!-- Left Menu -->
