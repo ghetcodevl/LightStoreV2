@@ -1,4 +1,4 @@
-package controller.admin;
+package controller;
 
 import dao.UserDAO;
 import java.io.IOException;
@@ -17,72 +17,62 @@ public class AdminCustomersServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
-        HttpSession session = request.getSession(false);
+        request.setCharacterEncoding("UTF-8");
+        HttpSession session = request.getSession();
         User admin = (User) session.getAttribute("user");
+
         if (admin == null || !"admin".equals(admin.getRole())) {
             response.sendRedirect(request.getContextPath() + "/LoginServlet");
             return;
         }
-        
+
+        // XỬ LÝ XÓA QUA GET
+        String action = request.getParameter("action");
+        if ("delete".equals(action)) {
+            try {
+                int id = Integer.parseInt(request.getParameter("id"));
+                UserDAO userDAO = new UserDAO();
+                boolean success = userDAO.deleteUser(id);
+                if (success) {
+                    session.setAttribute("successMessage", "Xóa khách hàng thành công!");
+                } else {
+                    session.setAttribute("errorMessage", "Xóa khách hàng thất bại!");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                session.setAttribute("errorMessage", "Lỗi: " + e.getMessage());
+            }
+            response.sendRedirect(request.getContextPath() + "/admin/customers");
+            return;
+        }
+
+        // HIỂN THỊ DANH SÁCH
         try {
             UserDAO userDAO = new UserDAO();
-            
-            // Phân trang
+
             int page = 1;
             int pageSize = 10;
             String pageParam = request.getParameter("page");
             if (pageParam != null && !pageParam.isEmpty()) {
                 page = Integer.parseInt(pageParam);
             }
-            
+
             String keyword = request.getParameter("keyword");
-            
+
             List<User> customerList = userDAO.getCustomersPaginated(page, pageSize, keyword);
             int totalCustomers = userDAO.countCustomersFiltered(keyword);
             int totalPages = (int) Math.ceil((double) totalCustomers / pageSize);
-            
+
             request.setAttribute("customerList", customerList);
             request.setAttribute("currentPage", page);
             request.setAttribute("totalPages", totalPages);
             request.setAttribute("keywordFilter", keyword);
-            
+
         } catch (Exception e) {
             e.printStackTrace();
             request.setAttribute("error", "Lỗi: " + e.getMessage());
         }
-        
+
         request.getRequestDispatcher("/admin/customers.jsp").forward(request, response);
-    }
-    
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        
-        HttpSession session = request.getSession(false);
-        User admin = (User) session.getAttribute("user");
-        if (admin == null || !"admin".equals(admin.getRole())) {
-            response.sendRedirect(request.getContextPath() + "/LoginServlet");
-            return;
-        }
-        
-        String action = request.getParameter("action");
-        
-        try {
-            UserDAO userDAO = new UserDAO();
-            
-            if ("delete".equals(action)) {
-                int id = Integer.parseInt(request.getParameter("id"));
-                boolean success = userDAO.deleteUser(id);
-                session.setAttribute(success ? "successMessage" : "errorMessage", 
-                    success ? "Đã xóa khách hàng!" : "Xóa thất bại!");
-            }
-            
-        } catch (Exception e) {
-            e.printStackTrace();
-            session.setAttribute("errorMessage", "Lỗi: " + e.getMessage());
-        }
-        
-        response.sendRedirect(request.getContextPath() + "/admin/customers");
     }
 }

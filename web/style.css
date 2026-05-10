@@ -21,7 +21,9 @@ body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-color: #f5f5f0;
     color: var(--text-dark);
-    padding-top: 70px;
+     margin: 0;           /* Đảm bảo margin = 0 */
+    padding: 0;  
+    
 }
 
 .container {
@@ -439,7 +441,43 @@ body {
 .search-input-group button:hover {
     background: var(--primary-dark);
 }
-
+ /* ========== FOOTER ========== */
+.footer {
+    background: var(--text-dark);
+    color: var(--text-light);
+    padding: 40px 30px 20px;
+    margin-top: 30px;
+}
+.footer-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 30px;
+    margin-bottom: 30px;
+}
+.footer-col h3 {
+    color: var(--white);
+    font-size: 16px;
+    margin-bottom: 15px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--primary-color);
+    display: inline-block;
+}
+.footer-col ul { list-style: none; }
+.footer-col ul li { margin-bottom: 8px; }
+.footer-col ul li a p{
+    color: var(--white);
+    text-decoration: none;
+    transition: 0.3s;
+}
+.footer-col ul li a:hover {
+    color: var(--primary-color);
+    padding-left: 5px;
+}
+.footer-bottom {
+    text-align: center;
+    padding-top: 20px;
+    border-top: 1px solid #333;
+}
 /* ========== RESPONSIVE ========== */
 @media (max-width: 1200px) {
     .product-list {

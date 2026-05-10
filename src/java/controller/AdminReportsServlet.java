@@ -1,4 +1,4 @@
-package controller.admin;
+package controller;
 
 import dao.OrderDAO;
 import dao.ProductDAO;
@@ -40,6 +40,7 @@ public class AdminReportsServlet extends HttpServlet {
                 if (yearParam != null && !yearParam.isEmpty()) {
                     year = Integer.parseInt(yearParam);
                 }
+                // Lấy doanh thu theo tháng (không cần status)
                 List<Object[]> revenueByMonth = orderDAO.getRevenueByMonth(year);
                 if (revenueByMonth == null) revenueByMonth = new ArrayList<>();
                 request.setAttribute("revenueData", revenueByMonth);
@@ -51,24 +52,15 @@ public class AdminReportsServlet extends HttpServlet {
                 if (limitParam != null && !limitParam.isEmpty()) {
                     limit = Integer.parseInt(limitParam);
                 }
+                // Top sản phẩm bán chạy (không cần status)
                 List<Object[]> topProducts = orderDAO.getTopProducts(limit);
                 if (topProducts == null) topProducts = new ArrayList<>();
                 request.setAttribute("topProducts", topProducts);
                 
             } else if ("orderStats".equals(type)) {
+                // Chỉ hiển thị tổng số đơn hàng (bỏ thống kê theo status)
                 int totalOrders = orderDAO.countAllOrders();
-                int pending = orderDAO.countOrdersByStatus("pending");
-                int confirmed = orderDAO.countOrdersByStatus("confirmed");
-                int shipped = orderDAO.countOrdersByStatus("shipped");
-                int delivered = orderDAO.countOrdersByStatus("delivered");
-                int cancelled = orderDAO.countOrdersByStatus("cancelled");
-                
                 request.setAttribute("totalOrders", totalOrders);
-                request.setAttribute("pending", pending);
-                request.setAttribute("confirmed", confirmed);
-                request.setAttribute("shipped", shipped);
-                request.setAttribute("delivered", delivered);
-                request.setAttribute("cancelled", cancelled);
             }
             
             request.setAttribute("reportType", type);

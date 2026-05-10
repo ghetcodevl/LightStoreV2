@@ -111,6 +111,24 @@
         border: 1px solid #e8d5a8;
         border-bottom-left-radius: 5px;
     }
+    /* Product link style */
+    .product-link {
+        display: inline-block;
+        background: #f0f0f0;
+        padding: 6px 12px;
+        margin: 5px 5px 0 0;
+        border-radius: 8px;
+        text-decoration: none;
+        color: #333;
+        font-size: 13px;
+        transition: all 0.2s;
+        border: 1px solid #e0e0e0;
+    }
+    .product-link:hover {
+        background: #b8860b;
+        color: white;
+        transform: translateX(3px);
+    }
     .chatbot-suggestions {
         padding: 10px;
         background: #f9f5ed;
@@ -172,13 +190,18 @@
     @media (max-width: 480px) {
         .chatbot-window { width: 320px; height: 480px; right: -10px; }
         .suggestion-btn { font-size: 10px; padding: 4px 8px; }
+        .product-link { font-size: 11px; padding: 4px 8px; }
     }
 </style>
 
 <script>
-    // Dữ liệu sản phẩm từ database (đồng bộ với sản phẩm thực tế)
+    // Lấy context path cho link
+    var contextPath = window.location.pathname.substring(0, window.location.pathname.indexOf('/', 1));
+    if (contextPath === '') contextPath = '';
+    
+    // Dữ liệu sản phẩm từ database
     var productDatabase = [
-        // Đèn Pha Lê (category_id = 1)
+        // Đèn Pha Lê
         { id: 1, name: "Đèn Chùm Pha Lê Kim Cương", price: 15000000, category: "Đèn Chùm Pha Lê", tag: "new" },
         { id: 2, name: "Đèn Chùm Pha Lê", price: 12500000, category: "Đèn Chùm Pha Lê", tag: "bestseller" },
         { id: 3, name: "Đèn Chùm Trái Tim", price: 8000000, category: "Đèn Chùm Pha Lê", tag: "new" },
@@ -190,7 +213,7 @@
         { id: 58, name: "Đèn Chùm Pha Lê 15 Đèn CCP-6666", price: 28900000, category: "Đèn Chùm Pha Lê", tag: "bestseller" },
         { id: 61, name: "Đèn Chùm Pha Lê Kim Cương 8 Đèn", price: 16800000, category: "Đèn Chùm Pha Lê", tag: "bestseller" },
         { id: 65, name: "Đèn Chùm Pha Lê Ánh Sáng Vàng", price: 13500000, category: "Đèn Chùm Pha Lê", tag: "bestseller" },
-        // Đèn Cổ Điển (category_id = 2)
+        // Đèn Cổ Điển
         { id: 6, name: "Đèn Chùm Bát Đá Tự Nhiên", price: 1200000, category: "Đèn Chùm Cổ Điển", tag: "new" },
         { id: 7, name: "Đèn Chùm Đồng Phong Cách Indochi CCD", price: 450000, category: "Đèn Chùm Cổ Điển", tag: "sale" },
         { id: 8, name: "Đèn Chùm Tân Cổ Điển", price: 850000, category: "Đèn Chùm Cổ Điển", tag: "bestseller" },
@@ -204,7 +227,7 @@
         { id: 55, name: "Đèn Chùm Cổ Điển Đồng CCL-8899", price: 24500000, category: "Đèn Chùm Cổ Điển", tag: "new" },
         { id: 59, name: "Đèn Chùm Cổ Điển 12 Đèn CCL-5555", price: 32500000, category: "Đèn Chùm Cổ Điển", tag: "new" },
         { id: 62, name: "Đèn Chùm Cổ Điển Hoàng Gia 10 Đèn", price: 27900000, category: "Đèn Chùm Cổ Điển", tag: "new" },
-        // Đèn Đồng (category_id = 3)
+        // Đèn Đồng
         { id: 5, name: "Đèn Chùm đồng cao cấp", price: 9500000, category: "Đèn Chùm Đồng", tag: "sale" },
         { id: 10, name: "Đèn Chùm Đồng Châu Âu", price: 2000000, category: "Đèn Chùm Đồng", tag: "new" },
         { id: 13, name: "Đèn Chùm Đồng Nguyên Khối CCD-1888", price: 16500000, category: "Đèn Chùm Đồng", tag: "sale" },
@@ -216,7 +239,7 @@
         { id: 56, name: "Đèn Chùm Đồng Cao Cấp CCD-1666", price: 9900000, category: "Đèn Chùm Đồng", tag: "sale" },
         { id: 60, name: "Đèn Chùm Đồng Mạ Vàng CCD-2222", price: 18500000, category: "Đèn Chùm Đồng", tag: "sale" },
         { id: 63, name: "Đèn Chùm Đồng Antique CCD-3333", price: 15900000, category: "Đèn Chùm Đồng", tag: "sale" },
-        // Đèn Thả Trần (category_id = 4)
+        // Đèn Thả Trần
         { id: 14, name: "Đèn Thả Trần Phòng Khách CTT-2024", price: 4800000, category: "Đèn Thả Trần", tag: "new" },
         { id: 18, name: "Đèn Thả Trần Công Nghiệp CTT-2025", price: 3900000, category: "Đèn Thả Trần", tag: "new" },
         { id: 22, name: "Đèn Thả Trần Pha Lê CTT-2026", price: 5200000, category: "Đèn Thả Trần", tag: "new" },
@@ -226,7 +249,24 @@
         { id: 64, name: "Đèn Thả Trần Văn Phòng CTT-2027", price: 3500000, category: "Đèn Thả Trần", tag: "new" }
     ];
 
-    // Câu trả lời cho từ khóa
+    // Format sản phẩm thành link (mở cùng tab)
+    function formatProductListWithLinks(products, title) {
+        if (products.length === 0) return "😅 Không tìm thấy sản phẩm nào.";
+        var html = title + "<br><br>";
+        for (var i = 0; i < Math.min(products.length, 6); i++) {
+            var product = products[i];
+            var productUrl = contextPath + '/product-detail?id=' + product.id;
+            // QUAN TRỌNG: Không có target="_blank" để mở cùng tab
+            html += '<a href="' + productUrl + '" class="product-link">' + 
+                    '🔹 ' + product.name + ' - ' + formatPrice(product.price) + '</a><br>';
+        }
+        if (products.length > 6) {
+            html += "<br>📌 Và " + (products.length - 6) + " sản phẩm khác...";
+        }
+        html += "<br><br>💡 Click vào tên sản phẩm để xem chi tiết (sau đó bấm back để quay lại chat)!";
+        return html;
+    }
+    
     function getProductsByCategory(category) {
         return productDatabase.filter(p => p.category === category);
     }
@@ -237,18 +277,6 @@
     
     function getProductsByPriceRange(min, max) {
         return productDatabase.filter(p => p.price >= min && p.price <= max);
-    }
-    
-    function formatProductList(products, title) {
-        if (products.length === 0) return "😅 Không tìm thấy sản phẩm nào.";
-        var html = title + "<br>";
-        for (var i = 0; i < Math.min(products.length, 5); i++) {
-            html += "• <strong>" + products[i].name + "</strong> - " + formatPrice(products[i].price) + "<br>";
-        }
-        if (products.length > 5) {
-            html += "<br>📌 Và " + (products.length - 5) + " sản phẩm khác...";
-        }
-        return html;
     }
     
     function formatPrice(price) {
@@ -268,7 +296,6 @@
         if (send) send.addEventListener('click', sendMessage);
         if (input) input.addEventListener('keypress', function(event) { if (event.key === 'Enter') sendMessage(); });
         
-        // Xử lý click vào nút gợi ý
         var suggestionBtns = document.querySelectorAll('.suggestion-btn');
         suggestionBtns.forEach(function(btn) {
             btn.addEventListener('click', function() {
@@ -298,73 +325,51 @@
     function getReply(message) {
         var q = message.toLowerCase();
         
-        // Đèn pha lê
         if (q.includes('pha lê') && (q.includes('dưới 10') || q.includes('10tr'))) {
             var products = getProductsByPriceRange(0, 10000000).filter(p => p.category === "Đèn Chùm Pha Lê");
-            return formatProductList(products, "💎 Đèn pha lê dưới 10 triệu:");
+            return formatProductListWithLinks(products, "💎 Đèn pha lê dưới 10 triệu:");
         }
         if (q.includes('pha lê') || q.includes('pha le')) {
             var products = getProductsByCategory("Đèn Chùm Pha Lê");
-            return formatProductList(products, "💎 Các sản phẩm đèn pha lê:");
+            return formatProductListWithLinks(products, "💎 Các sản phẩm đèn pha lê:");
         }
-        
-        // Đèn cổ điển
         if (q.includes('cổ điển') || q.includes('co dien')) {
             var products = getProductsByCategory("Đèn Chùm Cổ Điển");
-            return formatProductList(products, "🏛️ Các sản phẩm đèn cổ điển:");
+            return formatProductListWithLinks(products, "🏛️ Các sản phẩm đèn cổ điển:");
         }
-        
-        // Đèn đồng
         if (q.includes('đồng') || q.includes('dong')) {
             var products = getProductsByCategory("Đèn Chùm Đồng");
-            return formatProductList(products, "🪙 Các sản phẩm đèn đồng:");
+            return formatProductListWithLinks(products, "🪙 Các sản phẩm đèn đồng:");
         }
-        
-        // Đèn thả trần
         if (q.includes('thả trần') || q.includes('tha tran')) {
             var products = getProductsByCategory("Đèn Thả Trần");
-            return formatProductList(products, "💡 Các sản phẩm đèn thả trần:");
+            return formatProductListWithLinks(products, "💡 Các sản phẩm đèn thả trần:");
         }
-        
-        // Hàng mới
-        if (q.includes('hàng mới') || q.includes('hang moi') || q.includes('mới')) {
+        if (q.includes('hàng mới') || q.includes('hang moi') || q.includes('mới về')) {
             var products = getProductsByTag("new");
-            return formatProductList(products, "🆕 Sản phẩm mới về:");
+            return formatProductListWithLinks(products, "🆕 Sản phẩm mới về:");
         }
-        
-        // Bán chạy
         if (q.includes('bán chạy') || q.includes('ban chay') || q.includes('hot')) {
             var products = getProductsByTag("bestseller");
-            return formatProductList(products, "⭐ Sản phẩm bán chạy:");
+            return formatProductListWithLinks(products, "⭐ Sản phẩm bán chạy:");
         }
-        
-        // Giảm giá
         if (q.includes('giảm giá') || q.includes('giam gia') || q.includes('sale')) {
             var products = getProductsByTag("sale");
-            return formatProductList(products, "🎯 Sản phẩm đang giảm giá:");
+            return formatProductListWithLinks(products, "🎯 Sản phẩm đang giảm giá:");
         }
-        
-        // Bảo hành
         if (q.includes('bảo hành') || q.includes('bao hanh')) {
             return "🔧 <strong>Chính sách bảo hành:</strong><br>• Bảo hành chính hãng <strong>24 tháng</strong><br>• Đổi mới trong <strong>7 ngày</strong> nếu lỗi nhà sản xuất<br>• Bảo trì miễn phí trọn đời tại showroom";
         }
-        
-        // Giao hàng - Thanh toán
         if (q.includes('giao hàng') || q.includes('van chuyen') || q.includes('thanh toán')) {
             return "🚚 <strong>Giao hàng - Thanh toán:</strong><br>• Giao hàng toàn quốc 2-5 ngày<br>• Phí ship 30.000đ - 80.000đ<br>• Thanh toán khi nhận hàng (COD)<br>• Chuyển khoản ngân hàng<br>• Thẻ tín dụng / Trả góp 0%";
         }
-        
-        // Chào hỏi
         if (q.includes('chào') || q.includes('hello') || q.includes('hi')) {
-            return "👋 Xin chào! Tôi có thể tư vấn đèn trang trí cho bạn. Bạn muốn tìm loại đèn nào?";
+            return "👋 Xin chào! Tôi có thể tư vấn đèn trang trí cho bạn. Bạn muốn tìm loại đèn nào?<br><br>💡 Gợi ý: 'đèn pha lê', 'đèn cổ điển', 'hàng mới', 'đèn dưới 10tr'";
         }
-        
-        // Cảm ơn
         if (q.includes('cảm ơn') || q.includes('cam on')) {
             return "😊 Cảm ơn bạn! Rất vui được hỗ trợ. Chúc bạn một ngày tốt lành!";
         }
         
-        // Mặc định
         return "🙏 Cảm ơn bạn đã quan tâm!<br><br>" +
                "📌 Bạn có thể hỏi tôi về:<br>" +
                "• Sản phẩm theo loại (đèn pha lê, cổ điển, đồng, thả trần)<br>" +

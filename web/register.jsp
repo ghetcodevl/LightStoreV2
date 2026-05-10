@@ -7,6 +7,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
         <title>Đăng ký - DecorLamp</title>
         <link rel="stylesheet" href="${pageContext.request.contextPath}/style.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/test.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
         <style>
 
@@ -202,58 +203,62 @@
                 color: red;
             }
             /* ========== FOOTER ========== */
-/*            .footer {
-                background: #1a1a1a;
-                color: #e8d5a8;
-                margin-top: 40px;
-                border-top: 3px solid var(--primary-color);
+            /*            .footer {
+                            background: #1a1a1a;
+                            color: #e8d5a8;
+                            margin-top: 40px;
+                            border-top: 3px solid var(--primary-color);
+                        }
+            
+                        .footer-col h3 {
+                            color: var(--primary-color);
+                            border-bottom: 2px solid var(--primary-color);
+                        }
+            
+                        .footer-col ul li a:hover {
+                            color: var(--primary-color);
+                        }*/
+            /* ========== FOOTER ========== */
+            .footer {
+                background: var(--text-dark);
+                color: var(--text-light);
+                padding: 40px 30px 20px;
+                margin-top: 30px;
             }
-
+            .footer-grid {
+                display: grid;
+                grid-template-columns: repeat(4, 1fr);
+                gap: 30px;
+                margin-bottom: 30px;
+            }
             .footer-col h3 {
-                color: var(--primary-color);
+                color: var(--white);
+                font-size: 16px;
+                margin-bottom: 15px;
+                padding-bottom: 8px;
                 border-bottom: 2px solid var(--primary-color);
+                display: inline-block;
             }
-
+            .footer-col ul {
+                list-style: none;
+            }
+            .footer-col ul li {
+                margin-bottom: 8px;
+            }
+            .footer-col ul li a p{
+                color: var(--white);
+                text-decoration: none;
+                transition: 0.3s;
+            }
             .footer-col ul li a:hover {
                 color: var(--primary-color);
-            }*/
-            /* ========== FOOTER ========== */
-.footer {
-    background: var(--text-dark);
-    color: var(--text-light);
-    padding: 40px 30px 20px;
-    margin-top: 30px;
-}
-.footer-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 30px;
-    margin-bottom: 30px;
-}
-.footer-col h3 {
-    color: var(--white);
-    font-size: 16px;
-    margin-bottom: 15px;
-    padding-bottom: 8px;
-    border-bottom: 2px solid var(--primary-color);
-    display: inline-block;
-}
-.footer-col ul { list-style: none; }
-.footer-col ul li { margin-bottom: 8px; }
-.footer-col ul li a p{
-    color: var(--white);
-    text-decoration: none;
-    transition: 0.3s;
-}
-.footer-col ul li a:hover {
-    color: var(--primary-color);
-    padding-left: 5px;
-}
-.footer-bottom {
-    text-align: center;
-    padding-top: 20px;
-    border-top: 1px solid #333;
-}
+                padding-left: 5px;
+            }
+            .footer-bottom {
+                text-align: center;
+                padding-top: 20px;
+                border-top: 1px solid #333;
+            }
         </style>
     </head>
     <body>
@@ -349,50 +354,44 @@
 
         <!-- Footer -->
         <footer class="footer">
-            <div class="footer-container">
-                <div class="footer-row">
-                    <div class="footer-col">
-                        <h3>DECORLAMP</h3>
-                        <p class="footer-desc">
-                            Chuyên cung cấp các sản phẩm đèn trang trí cao cấp, đèn chùm pha lê, 
-                            đèn cổ điển, đèn đồng... Với thiết kế sang trọng, chất lượng vượt trội.
-                        </p>
-                    </div>
-                    <div class="footer-col">
-                        <h3>SẢN PHẨM</h3>
-                        <ul>
-                            <li><a href="${pageContext.request.contextPath}/products?category=1">Đèn Chùm Pha Lê</a></li>
-                            <li><a href="${pageContext.request.contextPath}/products?category=2">Đèn Chùm Cổ Điển</a></li>
-                            <li><a href="${pageContext.request.contextPath}/products?category=3">Đèn Chùm Đồng</a></li>
-                            <li><a href="${pageContext.request.contextPath}/products?category=4">Đèn Thả Trần</a></li>
-                        </ul>
-                    </div>
-                    <div class="footer-col">
-                        <h3>HỖ TRỢ</h3>
-                        <ul>
-                            <li><a href="#">Hướng dẫn mua hàng</a></li>
-                            <li><a href="#">Chính sách vận chuyển</a></li>
-                            <li><a href="#">Chính sách đổi trả</a></li>
-                            <li><a href="#">Chính sách bảo hành</a></li>
-                        </ul>
-                    </div>
-                    <div class="footer-col">
-                        <h3>THÔNG TIN</h3>
-                        <ul class="footer-contact">
-                            <li>📞 Hotline: 0965.69.8866</li>
-                            <li>📧 Email: decorlamp@gmail.com</li>
-                            <li>📍 Hà Nội: Số 8A Phạm Hùng, Mễ Trì</li>
-                            <li>📍 TP.HCM: Số 73 Ỷ Lan, Tân Phú</li>
-                        </ul>
-                    </div>
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h4>DECORLAMP</h4>
+                    <p style="margin-top: 10px;">Chuyên cung cấp đèn trang trí cao cấp, đèn chùm pha lê, đèn cổ điển, đèn đồng.</p>
                 </div>
-                <div class="footer-bottom">
-                    <p>© 2024 DecorLamp. All rights reserved.</p>
-                    <p>Nhóm thực hiện: Đặng Minh Quốc, Lại Thế Trường, Lê Anh Tuấn</p>
+                <div class="footer-col">
+                    <h4>SẢN PHẨM</h4>
+                    <ul>
+                        <li><a href="${pageContext.request.contextPath}/products?category=1">Đèn Chùm Pha Lê</a></li>
+                        <li><a href="${pageContext.request.contextPath}/products?category=2">Đèn Chùm Cổ Điển</a></li>
+                        <li><a href="${pageContext.request.contextPath}/products?category=3">Đèn Chùm Đồng</a></li>
+                        <li><a href="${pageContext.request.contextPath}/products?category=4">Đèn Thả Trần</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>HỖ TRỢ</h4>
+                    <ul>
+                        <li><a href="#">Hướng dẫn mua hàng</a></li>
+                        <li><a href="#">Chính sách vận chuyển</a></li>
+                        <li><a href="#">Chính sách bảo hành</a></li>
+                        <li><a href="#">Phương thức thanh toán</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>LIÊN HỆ</h4>
+                    <ul>
+                        <li><i class="fas fa-phone"></i> 0868.506.503</li>
+                        <li><i class="fas fa-phone"></i> 0981.983.003</li>
+                        <li><i class="fas fa-envelope"></i> decorlamp@gmail.com</li>
+                        <li><i class="fas fa-map-marker-alt"></i> Số 8A Phạm Hùng, Hà Nội</li>
+                    </ul>
                 </div>
             </div>
+            <div class="footer-bottom">
+                <p>© 2024 DecorLamp. All rights reserved.</p>
+                <p>Nhóm thực hiện: Đặng Minh Quốc, Lại Thế Trường, Lê Anh Tuấn</p>
+            </div>
         </footer>
-    </div>
-</div>
-</body>
+
+    </body>
 </html>

@@ -3,36 +3,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/D:/Java/LightStore/web/dashboard.jsp</file>
-            <file>file:/D:/Java/LightStore/src/java/controller/RegisterServlet.java</file>
-            <file>file:/D:/Java/LightStore/src/java/controller/CartServlet.java</file>
-            <file>file:/D:/Java/LightStore/src/java/model/User.java</file>
-            <file>file:/D:/Java/LightStore/src/java/model/Category.java</file>
-            <file>file:/D:/Java/LightStore/src/java/controller/ProductDetailServlet.java</file>
-            <file>file:/D:/Java/LightStore/src/java/controller/CheckoutServlet.java</file>
-            <file>file:/D:/Java/LightStore/src/java/controller/AdminProductsServlet.java</file>
-            <file>file:/D:/Java/LightStore/web/admin/customers.jsp</file>
-            <file>file:/D:/Java/LightStore/src/java/dao/ProductDAO.java</file>
-            <file>file:/D:/Java/LightStore/src/java/dao/CategoryDAO.java</file>
-            <file>file:/D:/Java/LightStore/src/java/model/Order.java</file>
-            <file>file:/D:/Java/LightStore/src/java/controller/AdminConfirmOrderServlet.java</file>
-            <file>file:/D:/Java/LightStore/src/java/dao/UserDAO.java</file>
-            <file>file:/D:/Java/LightStore/src/java/controller/AdminCustomersServlet.java</file>
-            <file>file:/D:/Java/LightStore/web/login.jsp</file>
-            <file>file:/D:/Java/LightStore/src/java/controller/AdminDashboardServlet.java</file>
-            <file>file:/D:/Java/LightStore/src/java/model/OrderItem.java</file>
-            <file>file:/D:/Java/LightStore/web/admin/categories.jsp</file>
-            <file>file:/D:/Java/LightStore/src/java/controller/LogoutServlet.java</file>
-            <file>file:/D:/Java/LightStore/src/java/controller/AdminCategoriesServlet.java</file>
-            <file>file:/D:/Java/LightStore/src/java/controller/ContactServlet.java</file>
-            <file>file:/D:/Java/LightStore/web/admin/products.jsp</file>
-            <file>file:/D:/Java/LightStore/src/java/controller/BuyNowServlet.java</file>
-            <file>file:/D:/Java/LightStore/src/java/controller/AdminOrdersServlet.java</file>
-            <file>file:/D:/Java/LightStore/web/index.jsp</file>
-            <file>file:/D:/Java/LightStore/web/admin/reports.jsp</file>
-            <file>file:/D:/Java/LightStore/src/java/controller/AdminReportsServlet.java</file>
-            <file>file:/D:/Java/LightStore/src/java/controller/LoginServlet.java</file>
-            <file>file:/D:/Java/LightStore/src/java/dao/OrderDAO.java</file>
+            <file>file:/D:/Java/LightStore/web/contact.jsp</file>
+            <file>file:/D:/Java/LightStore/src/java/controller/Home.java</file>
+            <file>file:/D:/Java/LightStore/web/register.jsp</file>
+            <file>file:/D:/Java/LightStore/web/style.css</file>
         </group>
     </open-files>
 </project-private>
