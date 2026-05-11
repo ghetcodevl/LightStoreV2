@@ -5,21 +5,12 @@ public class OrderItem {
     private int orderId;
     private int productId;
     private String productName;
+    private String productImage;
     private int quantity;
     private double price;
     
     public OrderItem() {}
     
-    public OrderItem(int id, int orderId, int productId, String productName, int quantity, double price) {
-        this.id = id;
-        this.orderId = orderId;
-        this.productId = productId;
-        this.productName = productName;
-        this.quantity = quantity;
-        this.price = price;
-    }
-    
-    // Getters and Setters
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
     
@@ -31,6 +22,9 @@ public class OrderItem {
     
     public String getProductName() { return productName; }
     public void setProductName(String productName) { this.productName = productName; }
+    
+    public String getProductImage() { return productImage; }
+    public void setProductImage(String productImage) { this.productImage = productImage; }
     
     public int getQuantity() { return quantity; }
     public void setQuantity(int quantity) { this.quantity = quantity; }

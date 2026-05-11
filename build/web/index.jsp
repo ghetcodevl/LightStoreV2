@@ -11,14 +11,53 @@
         <link rel="stylesheet" href="${pageContext.request.contextPath}/test.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
         <style>
-            /* ========== BLOG SECTION STYLE TRỰC TIẾP ========== */
+            /* Product Image Wrapper & Sale Badge */
+            .product-item {
+                position: relative;
+            }
+            .image-wrapper {
+                position: relative;
+                overflow: hidden;
+                border-radius: 8px;
+            }
+            .sale-badge {
+                position: absolute;
+                top: 10px;
+                left: 10px;
+                background: #c0392b;
+                color: white;
+                padding: 5px 12px;
+                border-radius: 25px;
+                font-size: 13px;
+                font-weight: bold;
+                z-index: 10;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            }
+            .price-box {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 3px;
+                margin-top: 8px;
+            }
+            .old-price {
+                font-size: 13px;
+                color: #999;
+                text-decoration: line-through;
+            }
+            .price {
+                font-size: 16px;
+                font-weight: 700;
+                color: #c0392b;
+            }
+
+            /* Blog Section */
             .blog-section {
                 background: #f8f8f8;
                 padding: 50px 30px;
                 margin: 40px 0 0;
                 border-radius: 12px;
             }
-
             .blog-section .content-title {
                 font-size: 24px;
                 font-weight: bold;
@@ -29,7 +68,6 @@
                 position: relative;
                 border-bottom: none;
             }
-
             .blog-section .content-title:after {
                 content: '';
                 display: block;
@@ -38,16 +76,12 @@
                 background: #c0392b;
                 margin: 12px auto 0;
             }
-
-            /* Blog Grid */
             .blog-grid {
                 display: grid;
                 grid-template-columns: repeat(4, 1fr);
                 gap: 25px;
                 margin-bottom: 40px;
             }
-
-            /* Blog Card */
             .blog-card {
                 background: white;
                 border-radius: 12px;
@@ -55,27 +89,22 @@
                 transition: all 0.3s;
                 box-shadow: 0 2px 10px rgba(0,0,0,0.05);
             }
-
             .blog-card:hover {
                 transform: translateY(-5px);
                 box-shadow: 0 10px 25px rgba(0,0,0,0.1);
             }
-
             .blog-card-image {
                 height: 180px;
                 overflow: hidden;
             }
-
             .blog-card-image img {
                 width: 100%;
                 height: 100%;
                 object-fit: cover;
             }
-
             .blog-card-content {
                 padding: 15px;
             }
-
             .blog-card-content h3 {
                 font-size: 15px;
                 font-weight: bold;
@@ -83,29 +112,24 @@
                 margin-bottom: 10px;
                 line-height: 1.4;
             }
-
             .blog-card-content p {
                 font-size: 13px;
                 color: #666;
                 line-height: 1.5;
                 margin-bottom: 12px;
             }
-
             .blog-card-content .read-more {
                 color: #c0392b;
                 text-decoration: none;
                 font-weight: bold;
                 font-size: 12px;
             }
-
             .blog-card-content .read-more:hover {
                 color: #a93226;
             }
-
             .blog-more {
                 text-align: center;
             }
-
             .btn-view-all {
                 display: inline-block;
                 background: transparent;
@@ -116,19 +140,16 @@
                 font-weight: bold;
                 text-decoration: none;
             }
-
             .btn-view-all:hover {
                 background: #c0392b;
                 color: white;
             }
 
-            /* Responsive */
             @media (max-width: 1024px) {
                 .blog-grid {
                     grid-template-columns: repeat(2, 1fr);
                 }
             }
-
             @media (max-width: 768px) {
                 .blog-section {
                     padding: 30px 15px;
@@ -141,9 +162,7 @@
     </head>
     <body>
         <div class="container">
-           
-
-            <!-- ========== SLIDESHOW BANNER ========== -->
+            <!-- Slideshow Banner -->
             <div class="slideshow-container">
                 <div class="slide fade">
                     <img src="${pageContext.request.contextPath}/images/banner2.png" alt="Banner 1">
@@ -151,37 +170,28 @@
                 <div class="slide fade">
                     <img src="https://casani.vn/img/g/g94.jpg" alt="Banner 2">
                 </div>
-                <!--                <a class="prev" onclick="changeSlide(-1)">&#10094;</a>
-                                <a class="next" onclick="changeSlide(1)">&#10095;</a>
-                                <div class="dots-container">
-                                    <span class="dot" onclick="currentSlide(1)"></span>
-                                    <span class="dot" onclick="currentSlide(2)"></span>
-                                </div>-->
             </div>
 
-            <!-- ========== MAIN MENU ========== -->
-            <div class="main-menu">
+            <!-- Main Menu -->
+<!--            <div class="main-menu">
                 <ul>
-<!--                    <li><a href="${pageContext.request.contextPath}/about">Giới thiệu</a></li>-->
-                    <li><a href="${pageContext.request.contextPath}/Home">Trang chủ</a></li>
-                    <li><a href="${pageContext.request.contextPath}/products">Sản phẩm</a></li>
-                    <li><a href="${pageContext.request.contextPath}/contact">Liên hệ</a></li>
-                    <li><a href="${pageContext.request.contextPath}/cart">Giỏ hàng</a></li>
-
+                    <li><a href="${pageContext.request.contextPath}/Home">TRANG CHỦ</a></li>
+                    <li><a href="${pageContext.request.contextPath}/products">SẢN PHẨM</a></li>
+                    <li><a href="${pageContext.request.contextPath}/contact">LIÊN HỆ</a></li>
+                    <li><a href="${pageContext.request.contextPath}/cart">GIỎ HÀNG</a></li>
                     <li class="search-form">
                         <form action="${pageContext.request.contextPath}/products" method="get" style="display: flex;">
                             <input type="text" name="keyword" placeholder="Tìm kiếm sản phẩm..." value="${param.keyword}">
                             <button type="submit"><i class="fas fa-search"></i></button>
                         </form>
                     </li>
-
                     <div class="cart-info">
                         <c:choose>
                             <c:when test="${not empty sessionScope.user}">
                                 <c:if test="${sessionScope.user.role == 'admin'}">
-                                    <a href="${pageContext.request.contextPath}/admin/dashboard">DASH BOARD</a>
+                                    <a href="${pageContext.request.contextPath}/admin/dashboard">DASHBOARD</a>
                                 </c:if>
-                                <a href="#" class="user-name"><i class="fas fa-user"></i> ${sessionScope.user.fullName}</a>
+                                <a href="${pageContext.request.contextPath}/profile" class="user-name"><i class="fas fa-user"></i> ${sessionScope.user.fullName}</a>
                                 <a href="#" onclick="confirmLogout(event)" class="logout-btn">Đăng xuất</a>
                             </c:when>
                             <c:otherwise>
@@ -191,8 +201,8 @@
                         </c:choose>
                     </div>
                 </ul>
-            </div>
-
+            </div>-->
+<jsp:include page="/header.jsp" />
             <script>
                 function confirmLogout(event) {
                     event.preventDefault();
@@ -202,7 +212,7 @@
                 }
             </script>
 
-            <!-- ========== TOP ROW ========== -->
+            <!-- Top Row -->
             <div class="top-row">
                 <!-- Left Sidebar -->
                 <div class="left-sidebar">
@@ -210,9 +220,9 @@
                         <h3>SẢN PHẨM</h3>
                         <ul>
                             <li><a href="${pageContext.request.contextPath}/products?category=1">Đèn Chùm Pha Lê</a></li>
-                            <li><a href="${pageContext.request.contextPath}/products?category=2">Đèn Chùm cổ điển</a></li>
+                            <li><a href="${pageContext.request.contextPath}/products?category=2">Đèn Chùm Cổ Điển</a></li>
                             <li><a href="${pageContext.request.contextPath}/products?category=3">Đèn Chùm Đồng</a></li>
-                            <li><a href="${pageContext.request.contextPath}/products?category=4">Đèn Chùm phòng khách</a></li>
+                            <li><a href="${pageContext.request.contextPath}/products?category=4">Đèn Thả Trần</a></li>
                             <ul>
                                 <li><a href="${pageContext.request.contextPath}/products?tag=new">Hàng mới</a></li>
                                 <li><a href="${pageContext.request.contextPath}/products?tag=bestseller">Bán chạy</a></li>
@@ -229,7 +239,7 @@
                 </div>
             </div>
 
-            <!-- ========== POLICY BAR ========== -->
+            <!-- Policy Bar -->
             <div class="policy-bar">
                 <div class="policy-item">
                     <div class="icon"><img src="${pageContext.request.contextPath}/images/1.png" alt="Uy tín"></div>
@@ -261,22 +271,36 @@
                 </div>
             </div>
 
-            <!-- ========== PRODUCT SECTION ========== -->
+            <!-- Product Section -->
             <div class="product-section">
                 <!-- Sản phẩm nổi bật -->
-                <h3 class="section-title">🔥 SẢN PHẨM NỔI BẬT</h3>
+                <h3 class="section-title">SẢN PHẨM NỔI BẬT</h3>
                 <div class="product-grid">
                     <c:forEach items="${listP}" var="p" begin="0" end="7">
                         <div class="product-item">
                             <a href="${pageContext.request.contextPath}/product-detail?id=${p.id}">
-                                <img src="${p.image}" alt="${p.name}" onerror="this.src='https://via.placeholder.com/300x200?text=No+Image'">
+                                <div class="image-wrapper">
+                                    <img src="${p.image}" alt="${p.name}" onerror="this.src='https://via.placeholder.com/300x200?text=No+Image'">
+                                    <c:if test="${p.tag == 'sale' and p.oldPrice > 0 and p.oldPrice != p.price}">
+                                        <div class="sale-badge">-${p.discountPercent}%</div>
+                                    </c:if>
+                                </div>
                                 <h4>${p.name}</h4>
-                                <p class="price"><fmt:formatNumber value="${p.price}" pattern="#,##0"/>₫</p>
+                                <c:choose>
+                                    <c:when test="${p.tag == 'sale' and p.oldPrice > 0 and p.oldPrice != p.price}">
+                                        <div class="price-box">
+                                            <span class="old-price"><fmt:formatNumber value="${p.oldPrice}" pattern="#,##0"/>đ</span>
+                                            <span class="price"><fmt:formatNumber value="${p.price}" pattern="#,##0"/>đ</span>
+                                        </div>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <p class="price"><fmt:formatNumber value="${p.price}" pattern="#,##0"/>đ</p>
+                                    </c:otherwise>
+                                </c:choose>
                             </a>
                         </div>
                     </c:forEach>
                 </div>
-
 
                 <!-- Hàng mới -->
                 <h3 class="section-title">HÀNG MỚI</h3>
@@ -284,15 +308,27 @@
                     <c:forEach items="${newProducts}" var="p" begin="0" end="7">
                         <div class="product-item">
                             <a href="${pageContext.request.contextPath}/product-detail?id=${p.id}">
-                                <img src="${p.image}" alt="${p.name}" onerror="this.src='https://via.placeholder.com/300x200?text=No+Image'">
+                                <div class="image-wrapper">
+                                    <img src="${p.image}" alt="${p.name}" onerror="this.src='https://via.placeholder.com/300x200?text=No+Image'">
+                                    <c:if test="${p.tag == 'sale' and p.oldPrice > 0 and p.oldPrice != p.price}">
+                                        <div class="sale-badge">-${p.discountPercent}%</div>
+                                    </c:if>
+                                </div>
                                 <h4>${p.name}</h4>
-                                <p class="price"><fmt:formatNumber value="${p.price}" pattern="#,##0"/>₫</p>
+                                <c:choose>
+                                    <c:when test="${p.tag == 'sale' and p.oldPrice > 0 and p.oldPrice != p.price}">
+                                        <div class="price-box">
+                                            <span class="old-price"><fmt:formatNumber value="${p.oldPrice}" pattern="#,##0"/>đ</span>
+                                            <span class="price"><fmt:formatNumber value="${p.price}" pattern="#,##0"/>đ</span>
+                                        </div>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <p class="price"><fmt:formatNumber value="${p.price}" pattern="#,##0"/>đ</p>
+                                    </c:otherwise>
+                                </c:choose>
                             </a>
                         </div>
                     </c:forEach>
-                    <c:if test="${empty newProducts}">
-                        <p class="empty-message">Chưa có sản phẩm nào trong mục này</p>
-                    </c:if>
                 </div>
 
                 <!-- Bán chạy -->
@@ -301,15 +337,27 @@
                     <c:forEach items="${bestsellerProducts}" var="p" begin="0" end="7">
                         <div class="product-item">
                             <a href="${pageContext.request.contextPath}/product-detail?id=${p.id}">
-                                <img src="${p.image}" alt="${p.name}" onerror="this.src='https://via.placeholder.com/300x200?text=No+Image'">
+                                <div class="image-wrapper">
+                                    <img src="${p.image}" alt="${p.name}" onerror="this.src='https://via.placeholder.com/300x200?text=No+Image'">
+                                    <c:if test="${p.tag == 'sale' and p.oldPrice > 0 and p.oldPrice != p.price}">
+                                        <div class="sale-badge">-${p.discountPercent}%</div>
+                                    </c:if>
+                                </div>
                                 <h4>${p.name}</h4>
-                                <p class="price"><fmt:formatNumber value="${p.price}" pattern="#,##0"/>₫</p>
+                                <c:choose>
+                                    <c:when test="${p.tag == 'sale' and p.oldPrice > 0 and p.oldPrice != p.price}">
+                                        <div class="price-box">
+                                            <span class="old-price"><fmt:formatNumber value="${p.oldPrice}" pattern="#,##0"/>đ</span>
+                                            <span class="price"><fmt:formatNumber value="${p.price}" pattern="#,##0"/>đ</span>
+                                        </div>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <p class="price"><fmt:formatNumber value="${p.price}" pattern="#,##0"/>đ</p>
+                                    </c:otherwise>
+                                </c:choose>
                             </a>
                         </div>
                     </c:forEach>
-                    <c:if test="${empty bestsellerProducts}">
-                        <p class="empty-message">Chưa có sản phẩm nào trong mục này</p>
-                    </c:if>
                 </div>
 
                 <!-- Giảm giá -->
@@ -318,21 +366,26 @@
                     <c:forEach items="${saleProducts}" var="p" begin="0" end="7">
                         <div class="product-item">
                             <a href="${pageContext.request.contextPath}/product-detail?id=${p.id}">
-                                <img src="${p.image}" alt="${p.name}" onerror="this.src='https://via.placeholder.com/300x200?text=No+Image'">
+                                <div class="image-wrapper">
+                                    <img src="${p.image}" alt="${p.name}" onerror="this.src='https://via.placeholder.com/300x200?text=No+Image'">
+                                    <c:if test="${p.oldPrice > 0 and p.oldPrice != p.price}">
+                                        <div class="sale-badge">-${p.discountPercent}%</div>
+                                    </c:if>
+                                </div>
                                 <h4>${p.name}</h4>
-                                <p class="price"><fmt:formatNumber value="${p.price}" pattern="#,##0"/>₫</p>
+                                <div class="price-box">
+                                    <span class="old-price"><fmt:formatNumber value="${p.oldPrice}" pattern="#,##0"/>đ</span>
+                                    <span class="price"><fmt:formatNumber value="${p.price}" pattern="#,##0"/>đ</span>
+                                </div>
                             </a>
                         </div>
                     </c:forEach>
-                    <c:if test="${empty saleProducts}">
-                        <p class="empty-message">Chưa có sản phẩm nào trong mục này</p>
-                    </c:if>
                 </div>
             </div>
-            <!-- ========== BLOG SECTION ========== -->
+
+            <!-- Blog Section -->
             <div class="blog-section">
                 <div class="content-title">NHỮNG TIN TỨC, CÁCH LỰA CHỌN ĐÈN TRANG TRÍ</div>
-
                 <div class="blog-grid">
                     <div class="blog-card">
                         <div class="blog-card-image">
@@ -341,12 +394,11 @@
                                  onerror="this.src='https://placehold.co/400x250/e8d5a8/8b6914?text=No+Image'">
                         </div>
                         <div class="blog-card-content">
-                            <h3>💡 Bỏ túi 3 câu hỏi hay gặp khi sử dụng đèn pha lê đúng phong thủy</h3>
+                            <h3>Bỏ túi 3 câu hỏi hay gặp khi sử dụng đèn pha lê đúng phong thủy</h3>
                             <p>Hiện nay, có rất nhiều câu hỏi xoay quanh mẫu đèn pha lê được rất nhiều người tiêu dùng quan tâm...</p>
                             <a href="#" class="read-more">Đọc tiếp →</a>
                         </div>
                     </div>
-
                     <div class="blog-card">
                         <div class="blog-card-image">
                             <img src="${pageContext.request.contextPath}/images/casani-the-gioi-den-trang-tri-gia-re-chat-luong.jpg" 
@@ -354,12 +406,11 @@
                                  onerror="this.src='https://placehold.co/400x250/e8d5a8/8b6914?text=No+Image'">
                         </div>
                         <div class="blog-card-content">
-                            <h3>🏪 Casani - Thế giới đèn trang trí giá rẻ, chất lượng</h3>
+                            <h3>Casani - Thế giới đèn trang trí giá rẻ, chất lượng</h3>
                             <p>Bạn đang muốn mua đèn led trang trí cho căn nhà, văn phòng của mình? Casani chính là một thương hiệu lâu năm...</p>
                             <a href="#" class="read-more">Đọc tiếp →</a>
                         </div>
                     </div>
-
                     <div class="blog-card">
                         <div class="blog-card-image">
                             <img src="${pageContext.request.contextPath}/images/tong-hop-cac-cach-phoi-mau-den-trang-tri-noi-that.jpg" 
@@ -367,12 +418,11 @@
                                  onerror="this.src='https://placehold.co/400x250/e8d5a8/8b6914?text=No+Image'">
                         </div>
                         <div class="blog-card-content">
-                            <h3>🎨 Tổng hợp các cách phối màu đèn trang trí nội thất</h3>
+                            <h3>Tổng hợp các cách phối màu đèn trang trí nội thất</h3>
                             <p>Hiện nay nhu cầu sử dụng các loại đèn trang trí ngày càng trở nên phổ biến. Để tăng thêm hiệu quả trang trí...</p>
                             <a href="#" class="read-more">Đọc tiếp →</a>
                         </div>
                     </div>
-
                     <div class="blog-card">
                         <div class="blog-card-image">
                             <img src="${pageContext.request.contextPath}/images/45.jpg" 
@@ -380,18 +430,18 @@
                                  onerror="this.src='https://placehold.co/400x250/e8d5a8/8b6914?text=No+Image'">
                         </div>
                         <div class="blog-card-content">
-                            <h3>🏢 Những lưu ý khi lựa chọn đèn trang trí cho văn phòng</h3>
+                            <h3>Những lưu ý khi lựa chọn đèn trang trí cho văn phòng</h3>
                             <p>Hiện nay nhiều công ty ưu tiên lắp đèn trang trí để làm giải pháp chiếu sáng hữu hiệu cho văn phòng làm việc...</p>
                             <a href="#" class="read-more">Đọc tiếp →</a>
                         </div>
                     </div>
                 </div>
-
                 <div class="blog-more">
-                    <a href="#" class="btn-view-all">📖 Xem tất cả bài viết</a>
+                    <a href="#" class="btn-view-all">Xem tất cả bài viết</a>
                 </div>
             </div>
-            <!-- ========== FOOTER ========== -->
+
+            <!-- Footer -->
             <footer class="footer">
                 <div class="footer-grid">
                     <div class="footer-col">
@@ -427,8 +477,8 @@
                     </div>
                 </div>
                 <div class="footer-bottom">
-                    <p>© 2024 DecorLamp. All rights reserved. Designed by YourTeam</p>
-                    <p>Nhóm thực hiện: Đặng Minh Quốc (01/01/2005), Lại Thế Trường (02/02/2005), Lê Anh Tuấn (03/03/2005)</p>
+                    <p>© 2024 DecorLamp. All rights reserved.</p>
+                    <p>Nhóm thực hiện: Đặng Minh Quốc, Lại Thế Trường, Lê Anh Tuấn</p>
                 </div>
             </footer>
         </div>
@@ -444,12 +494,10 @@
                 showSlides(slideIndex += n);
                 resetTimer();
             }
-
             function currentSlide(n) {
                 showSlides(slideIndex = n);
                 resetTimer();
             }
-
             function showSlides(n) {
                 let slides = document.getElementsByClassName("slide");
                 let dots = document.getElementsByClassName("dot");
@@ -472,7 +520,6 @@
                     dots[slideIndex - 1].className += " active";
                 }
             }
-
             function startAutoSlide() {
                 slideInterval = setInterval(function () {
                     slideIndex++;
@@ -482,7 +529,6 @@
                     }
                 }, 5000);
             }
-
             function resetTimer() {
                 clearInterval(slideInterval);
                 startAutoSlide();

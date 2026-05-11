@@ -1,96 +1,65 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
- */
 package controller;
 
 import dao.ProductDAO;
+import dao.ReviewDAO;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.util.List;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import model.Product;
+import model.Review;
 
-/**
- *
- * @author admin
- */
-@WebServlet(name = "ProductDetailServlet", urlPatterns = {"/ProductDetailServlet" , "/product-detail"})
+@WebServlet(name = "ProductDetailServlet", urlPatterns = {"/product-detail"})
 public class ProductDetailServlet extends HttpServlet {
 
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet ProductDetailServlet</title>");
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet ProductDetailServlet at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
-        }
-    }
-
-  
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
+        request.setCharacterEncoding("UTF-8");
         try {
+            // Lấy id từ request parameter
             String idParam = request.getParameter("id");
             if (idParam == null || idParam.trim().isEmpty()) {
-                response.sendRedirect(request.getContextPath() + "/Home");
+                response.sendRedirect(request.getContextPath() + "/products");
                 return;
             }
-            
-            int id = Integer.parseInt(idParam);
-            ProductDAO dao = new ProductDAO();
-            Product product = dao.getById(id);
-            
+
+            int productId = Integer.parseInt(idParam);  // ← Khai báo productId ở đây
+
+            ProductDAO productDAO = new ProductDAO();
+            Product product = productDAO.getById(productId);
+
             if (product != null) {
                 request.setAttribute("product", product);
+
+                // Lấy sản phẩm liên quan
+                List<Product> relatedProducts = productDAO.getRelatedProducts(product.getCategoryId(), product.getId(), 8);
+                request.setAttribute("relatedProducts", relatedProducts);
+
+                // Lấy đánh giá sản phẩm - DÙNG productId ĐÃ KHAI BÁO
+                ReviewDAO reviewDAO = new ReviewDAO();
+                List<Review> reviews = reviewDAO.getReviewsByProduct(productId, 5, 0);
+                int totalReviews = reviewDAO.countReviewsByProduct(productId);
+                double avgRating = reviewDAO.getAverageRating(productId);
+
+                request.setAttribute("reviews", reviews);
+                request.setAttribute("totalReviews", totalReviews);
+                request.setAttribute("avgRating", avgRating);
+
                 request.getRequestDispatcher("/product-detail.jsp").forward(request, response);
             } else {
-                response.sendRedirect(request.getContextPath() + "/Home");
+                response.sendRedirect(request.getContextPath() + "/products");
             }
+
         } catch (NumberFormatException e) {
-            response.sendRedirect(request.getContextPath() + "/Home");
+            response.sendRedirect(request.getContextPath() + "/products");
         } catch (Exception e) {
             e.printStackTrace();
-            response.sendRedirect(request.getContextPath() + "/Home");
+            response.sendRedirect(request.getContextPath() + "/products");
         }
     }
-    
-    
-
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        processRequest(request, response);
-    }
-
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
-    @Override
-    public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
-
 }

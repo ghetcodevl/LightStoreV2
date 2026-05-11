@@ -3,10 +3,30 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+            <file>file:/D:/Java/LightStore/web/dashboard.jsp</file>
+            <file>file:/D:/Java/LightStore/src/java/controller/AdminCustomersServlet.java</file>
+            <file>file:/D:/Java/LightStore/web/reset-password.jsp</file>
+            <file>file:/D:/Java/LightStore/src/java/controller/AdminDashboardServlet.java</file>
+            <file>file:/D:/Java/LightStore/web/admin/categories.jsp</file>
+            <file>file:/D:/Java/LightStore/web/admin/products.jsp</file>
             <file>file:/D:/Java/LightStore/web/contact.jsp</file>
+            <file>file:/D:/Java/LightStore/web/style.css</file>
+            <file>file:/D:/Java/LightStore/web/admin/orders.jsp</file>
+            <file>file:/D:/Java/LightStore/src/java/dao/ContactDAO.java</file>
+            <file>file:/D:/Java/LightStore/web/admin/reports.jsp</file>
+            <file>file:/D:/Java/LightStore/web/chatbot.jsp</file>
+            <file>file:/D:/Java/LightStore/src/java/controller/AdminOrdersServlet.java</file>
+            <file>file:/D:/Java/LightStore/web/index.jsp</file>
+            <file>file:/D:/Java/LightStore/web/admin/customers.jsp</file>
+            <file>file:/D:/Java/LightStore/web/checkout.jsp</file>
+            <file>file:/D:/Java/LightStore/src/java/controller/AdminReportsServlet.java</file>
+            <file>file:/D:/Java/LightStore/web/cart.jsp</file>
             <file>file:/D:/Java/LightStore/src/java/controller/Home.java</file>
             <file>file:/D:/Java/LightStore/web/register.jsp</file>
-            <file>file:/D:/Java/LightStore/web/style.css</file>
+            <file>file:/D:/Java/LightStore/src/java/dao/UserDAO.java</file>
+            <file>file:/D:/Java/LightStore/src/java/controller/AdminConfirmOrderServlet.java</file>
+            <file>file:/D:/Java/LightStore/src/java/dao/OrderDAO.java</file>
+            <file>file:/D:/Java/LightStore/web/forgot-password.jsp</file>
         </group>
     </open-files>
 </project-private>

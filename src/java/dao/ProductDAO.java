@@ -21,18 +21,23 @@ public class ProductDAO {
         String sql = "SELECT * FROM products";
         try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
-                list.add(new Product(
-                        rs.getInt("id"),
-                        rs.getString("name"),
-                        rs.getString("image"),
-                        rs.getDouble("price")));
-
+                Product p = new Product();
+                p.setId(rs.getInt("id"));
+                p.setName(rs.getString("name"));
+                p.setImage(rs.getString("image"));
+                p.setPrice(rs.getDouble("price"));
+                p.setOldPrice(rs.getDouble("old_price"));      // Thêm
+                p.setDiscountPercent(rs.getInt("discount_percent")); // Thêm
+                p.setDescription(rs.getString("description"));
+                p.setTag(rs.getString("tag"));
+                p.setCategoryId(rs.getInt("category_id"));
+                list.add(p);
             }
         }
         return list;
     }
-    // Lấy sản phẩm theo ID
 
+    // Lấy sản phẩm theo ID
     public Product getById(int id) throws ClassNotFoundException, SQLException {
         String sql = "SELECT p.*, c.name as category_name FROM products p "
                 + "LEFT JOIN categories c ON p.category_id = c.id "
@@ -45,6 +50,8 @@ public class ProductDAO {
                     product.setId(rs.getInt("id"));
                     product.setName(rs.getString("name"));
                     product.setPrice(rs.getDouble("price"));
+                    product.setOldPrice(rs.getDouble("old_price"));      // Thêm
+                    product.setDiscountPercent(rs.getInt("discount_percent")); // Thêm
                     product.setImage(rs.getString("image"));
                     product.setDescription(rs.getString("description"));
                     product.setTag(rs.getString("tag"));
@@ -55,8 +62,8 @@ public class ProductDAO {
         }
         return null;
     }
-    // Đếm số lượng sản phẩm theo bộ lọc
 
+    // Đếm số lượng sản phẩm theo bộ lọc
     public int countProductsFiltered(String keyword, String category) throws ClassNotFoundException, SQLException {
         StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM products WHERE 1=1");
         List<Object> params = new ArrayList<>();
@@ -86,7 +93,7 @@ public class ProductDAO {
         return 0;
     }
 
-// Lấy sản phẩm theo category
+    // Lấy sản phẩm theo category
     public List<Product> getByCategory(int categoryId) throws ClassNotFoundException, SQLException {
         List<Product> list = new ArrayList<>();
         String sql = "SELECT * FROM products WHERE category_id = ?";
@@ -94,18 +101,24 @@ public class ProductDAO {
             ps.setInt(1, categoryId);
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
-                    list.add(new Product(
-                            rs.getInt("id"),
-                            rs.getString("name"),
-                            rs.getString("image"),
-                            rs.getDouble("price")));
+                    Product p = new Product();
+                    p.setId(rs.getInt("id"));
+                    p.setName(rs.getString("name"));
+                    p.setPrice(rs.getDouble("price"));
+                    p.setOldPrice(rs.getDouble("old_price"));      // Thêm
+                    p.setDiscountPercent(rs.getInt("discount_percent")); // Thêm
+                    p.setImage(rs.getString("image"));
+                    p.setDescription(rs.getString("description"));
+                    p.setTag(rs.getString("tag"));
+                    p.setCategoryId(rs.getInt("category_id"));
+                    list.add(p);
                 }
             }
         }
         return list;
     }
 
-// Lấy sản phẩm theo tag
+    // Lấy sản phẩm theo tag
     public List<Product> getByTag(String tag) throws ClassNotFoundException, SQLException {
         List<Product> list = new ArrayList<>();
         String sql = "SELECT * FROM products WHERE tag = ?";
@@ -117,8 +130,12 @@ public class ProductDAO {
                     p.setId(rs.getInt("id"));
                     p.setName(rs.getString("name"));
                     p.setPrice(rs.getDouble("price"));
+                    p.setOldPrice(rs.getDouble("old_price"));      // Thêm
+                    p.setDiscountPercent(rs.getInt("discount_percent")); // Thêm
                     p.setImage(rs.getString("image"));
+                    p.setDescription(rs.getString("description"));
                     p.setTag(rs.getString("tag"));
+                    p.setCategoryId(rs.getInt("category_id"));
                     list.add(p);
                 }
             }
@@ -137,7 +154,7 @@ public class ProductDAO {
         return 0;
     }
 
-// Lấy sản phẩm có phân trang
+    // Lấy sản phẩm có phân trang (cho admin)
     public List<Product> getProductsPaginated(int page, int pageSize, String keyword, String category)
             throws ClassNotFoundException, SQLException {
         List<Product> products = new ArrayList<>();
@@ -156,7 +173,7 @@ public class ProductDAO {
             params.add(Integer.parseInt(category));
         }
 
-        sql.append(" LIMIT ? OFFSET ?");
+        sql.append(" ORDER BY id DESC LIMIT ? OFFSET ?");
         params.add(pageSize);
         params.add(offset);
 
@@ -172,6 +189,8 @@ public class ProductDAO {
                     p.setId(rs.getInt("id"));
                     p.setName(rs.getString("name"));
                     p.setPrice(rs.getDouble("price"));
+                    p.setOldPrice(rs.getDouble("old_price"));      // Thêm
+                    p.setDiscountPercent(rs.getInt("discount_percent")); // Thêm
                     p.setImage(rs.getString("image"));
                     p.setDescription(rs.getString("description"));
                     p.setTag(rs.getString("tag"));
@@ -182,73 +201,70 @@ public class ProductDAO {
         }
         return products;
     }
+
     // Thêm sản phẩm
-
     public boolean insert(Product p) throws ClassNotFoundException, SQLException {
-        String sql = "INSERT INTO products (name, price, image, description, tag, category_id) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO products (name, price, old_price, discount_percent, image, description, tag, category_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, p.getName());
             ps.setDouble(2, p.getPrice());
-            ps.setString(3, p.getImage());
-            ps.setString(4, p.getDescription());
-            ps.setString(5, p.getTag());
-            ps.setInt(6, p.getCategoryId());
+            ps.setDouble(3, p.getOldPrice());
+            ps.setInt(4, p.getDiscountPercent());
+            ps.setString(5, p.getImage());
+            ps.setString(6, p.getDescription());
+            ps.setString(7, p.getTag());
+            ps.setInt(8, p.getCategoryId());
             return ps.executeUpdate() > 0;
         }
     }
 
-// Cập nhật sản phẩm
+    // Cập nhật sản phẩm
     public boolean update(Product p) throws ClassNotFoundException, SQLException {
-        String sql = "UPDATE products SET name = ?, price = ?, image = ?, description = ?, tag = ?, category_id = ? WHERE id = ?";
+        String sql = "UPDATE products SET name = ?, price = ?, old_price = ?, discount_percent = ?, image = ?, description = ?, tag = ?, category_id = ? WHERE id = ?";
         try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, p.getName());
             ps.setDouble(2, p.getPrice());
-            ps.setString(3, p.getImage());
-            ps.setString(4, p.getDescription());
-            ps.setString(5, p.getTag());
-            ps.setInt(6, p.getCategoryId());
-            ps.setInt(7, p.getId());
+            ps.setDouble(3, p.getOldPrice());
+            ps.setInt(4, p.getDiscountPercent());
+            ps.setString(5, p.getImage());
+            ps.setString(6, p.getDescription());
+            ps.setString(7, p.getTag());
+            ps.setInt(8, p.getCategoryId());
+            ps.setInt(9, p.getId());
             return ps.executeUpdate() > 0;
         }
     }
 
-// Xóa sản phẩm
-//    public boolean delete(int id) throws ClassNotFoundException, SQLException {
-//        // Kiểm tra ràng buộc khóa ngoại
-//        String checkSql = "SELECT COUNT(*) FROM order_items WHERE product_id = ?";
-//        try (Connection conn = DBConnection.getConnection(); PreparedStatement psCheck = conn.prepareStatement(checkSql)) {
-//            psCheck.setInt(1, id);
-//            try (ResultSet rs = psCheck.executeQuery()) {
-//                if (rs.next() && rs.getInt(1) > 0) {
-//                    return false; // Có đơn hàng chứa sản phẩm này, không thể xóa
-//                }
-//            }
-//        }
-//
-//        String sql = "DELETE FROM products WHERE id = ?";
-//        try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
-//            ps.setInt(1, id);
-//            return ps.executeUpdate() > 0;
-//        }
-//    }
+    // Xóa sản phẩm
     public boolean delete(int id) throws ClassNotFoundException, SQLException {
-    System.out.println("ProductDAO.delete() called with ID: " + id);
-    
-    String sql = "DELETE FROM products WHERE id = ?";
-    try (Connection conn = DBConnection.getConnection();
-         PreparedStatement ps = conn.prepareStatement(sql)) {
-        ps.setInt(1, id);
-        int result = ps.executeUpdate();
-        System.out.println("Delete result: " + result);
-        return result > 0;
-    } catch (SQLException e) {
-        System.out.println("SQL Error: " + e.getMessage());
-        e.printStackTrace();
-        throw e;
-    }
-}
+        System.out.println("ProductDAO.delete() called with ID: " + id);
 
-    // Lấy sản phẩm có phân trang và lọc
+        // Kiểm tra ràng buộc khóa ngoại với order_items
+        String checkSql = "SELECT COUNT(*) FROM order_items WHERE product_id = ?";
+        try (Connection conn = DBConnection.getConnection(); PreparedStatement psCheck = conn.prepareStatement(checkSql)) {
+            psCheck.setInt(1, id);
+            try (ResultSet rs = psCheck.executeQuery()) {
+                if (rs.next() && rs.getInt(1) > 0) {
+                    System.out.println("Cannot delete product ID=" + id + " because it exists in order_items");
+                    return false;
+                }
+            }
+        }
+
+        String sql = "DELETE FROM products WHERE id = ?";
+        try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            int result = ps.executeUpdate();
+            System.out.println("Delete result: " + result);
+            return result > 0;
+        } catch (SQLException e) {
+            System.out.println("SQL Error: " + e.getMessage());
+            e.printStackTrace();
+            throw e;
+        }
+    }
+
+    // Lấy sản phẩm có phân trang và lọc (cho user)
     public List<Product> getProductsWithPagination(int offset, int limit, String categoryId, String tag)
             throws ClassNotFoundException, SQLException {
         List<Product> list = new ArrayList<>();
@@ -265,7 +281,7 @@ public class ProductDAO {
             params.add(tag);
         }
 
-        sql.append(" LIMIT ? OFFSET ?");
+        sql.append(" ORDER BY id DESC LIMIT ? OFFSET ?");
         params.add(limit);
         params.add(offset);
 
@@ -281,7 +297,10 @@ public class ProductDAO {
                     p.setId(rs.getInt("id"));
                     p.setName(rs.getString("name"));
                     p.setPrice(rs.getDouble("price"));
+                    p.setOldPrice(rs.getDouble("old_price"));      // Thêm
+                    p.setDiscountPercent(rs.getInt("discount_percent")); // Thêm
                     p.setImage(rs.getString("image"));
+                    p.setDescription(rs.getString("description"));
                     p.setTag(rs.getString("tag"));
                     p.setCategoryId(rs.getInt("category_id"));
                     list.add(p);
@@ -291,7 +310,7 @@ public class ProductDAO {
         return list;
     }
 
-// Đếm tổng số sản phẩm theo filter
+    // Đếm tổng số sản phẩm theo filter (cho user)
     public int countProducts(String categoryId, String tag) throws ClassNotFoundException, SQLException {
         StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM products WHERE 1=1");
         List<Object> params = new ArrayList<>();
@@ -320,59 +339,8 @@ public class ProductDAO {
         }
         return 0;
     }
-    // Tìm kiếm sản phẩm thông minh (tìm theo từ khóa, tách từ)
 
-//    public List<Product> searchProducts(String keyword, int offset, int limit)
-//            throws ClassNotFoundException, SQLException {
-//        List<Product> list = new ArrayList<>();
-//
-//        // Tách từ khóa thành các từ riêng biệt
-//        String[] words = keyword.toLowerCase().trim().split("\\s+");
-//
-//        StringBuilder sql = new StringBuilder("SELECT * FROM products WHERE ");
-//        List<Object> params = new ArrayList<>();
-//
-//        // Tìm kiếm theo từng từ
-//        for (int i = 0; i < words.length; i++) {
-//            if (i > 0) {
-//                sql.append(" OR ");
-//            }
-//            sql.append("(LOWER(name) LIKE ? OR LOWER(description) LIKE ?)");
-//            params.add("%" + words[i] + "%");
-//            params.add("%" + words[i] + "%");
-//        }
-//
-//        // Ưu tiên sắp xếp: tên chính xác lên đầu, sau đó theo độ dài tên
-//        sql.append(" ORDER BY CASE WHEN LOWER(name) LIKE ? THEN 1 ELSE 2 END, LENGTH(name) ASC");
-//        params.add("%" + keyword.toLowerCase() + "%");
-//
-//        sql.append(" LIMIT ? OFFSET ?");
-//        params.add(limit);
-//        params.add(offset);
-//
-//        try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql.toString())) {
-//
-//            for (int i = 0; i < params.size(); i++) {
-//                ps.setObject(i + 1, params.get(i));
-//            }
-//
-//            try (ResultSet rs = ps.executeQuery()) {
-//                while (rs.next()) {
-//                    Product p = new Product();
-//                    p.setId(rs.getInt("id"));
-//                    p.setName(rs.getString("name"));
-//                    p.setPrice(rs.getDouble("price"));
-//                    p.setImage(rs.getString("image"));
-//                    p.setDescription(rs.getString("description"));
-//                    p.setTag(rs.getString("tag"));
-//                    p.setCategoryId(rs.getInt("category_id"));
-//                    list.add(p);
-//                }
-//            }
-//        }
-//        return list;
-//    }
-// Tìm kiếm đơn giản nhưng hiệu quả
+    // Tìm kiếm sản phẩm đơn giản
     public List<Product> searchProducts(String keyword, int offset, int limit)
             throws ClassNotFoundException, SQLException {
         List<Product> list = new ArrayList<>();
@@ -390,6 +358,8 @@ public class ProductDAO {
                     p.setId(rs.getInt("id"));
                     p.setName(rs.getString("name"));
                     p.setPrice(rs.getDouble("price"));
+                    p.setOldPrice(rs.getDouble("old_price"));      // Thêm
+                    p.setDiscountPercent(rs.getInt("discount_percent")); // Thêm
                     p.setImage(rs.getString("image"));
                     p.setDescription(rs.getString("description"));
                     p.setTag(rs.getString("tag"));
@@ -400,29 +370,13 @@ public class ProductDAO {
         }
         return list;
     }
-// Đếm kết quả tìm kiếm thông minh
 
+    // Đếm kết quả tìm kiếm
     public int countSearchProducts(String keyword) throws ClassNotFoundException, SQLException {
-        String[] words = keyword.toLowerCase().trim().split("\\s+");
-
-        StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM products WHERE ");
-        List<Object> params = new ArrayList<>();
-
-        for (int i = 0; i < words.length; i++) {
-            if (i > 0) {
-                sql.append(" OR ");
-            }
-            sql.append("(LOWER(name) LIKE ? OR LOWER(description) LIKE ?)");
-            params.add("%" + words[i] + "%");
-            params.add("%" + words[i] + "%");
-        }
-
-        try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql.toString())) {
-
-            for (int i = 0; i < params.size(); i++) {
-                ps.setObject(i + 1, params.get(i));
-            }
-
+        String sql = "SELECT COUNT(*) FROM products WHERE name LIKE ? OR description LIKE ?";
+        try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, "%" + keyword + "%");
+            ps.setString(2, "%" + keyword + "%");
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     return rs.getInt(1);
@@ -431,8 +385,35 @@ public class ProductDAO {
         }
         return 0;
     }
+    // Lấy sản phẩm liên quan (cùng category, không bao gồm sản phẩm hiện tại)
 
-// Tìm kiếm gợi ý (autocomplete)
+    // Lấy sản phẩm liên quan cùng danh mục
+    public List<Product> getRelatedProducts(int categoryId, int currentProductId, int limit)
+            throws ClassNotFoundException, SQLException {
+        List<Product> list = new ArrayList<>();
+        String sql = "SELECT * FROM products WHERE category_id = ? AND id != ? LIMIT ?";
+        try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, categoryId);
+            ps.setInt(2, currentProductId);
+            ps.setInt(3, limit);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Product p = new Product();
+                    p.setId(rs.getInt("id"));
+                    p.setName(rs.getString("name"));
+                    p.setPrice(rs.getDouble("price"));
+                    p.setOldPrice(rs.getDouble("old_price"));
+                    p.setDiscountPercent(rs.getInt("discount_percent"));
+                    p.setImage(rs.getString("image"));
+                    p.setTag(rs.getString("tag"));
+                    list.add(p);
+                }
+            }
+        }
+        return list;
+    }
+
+    // Tìm kiếm gợi ý (autocomplete)
     public List<String> getSearchSuggestions(String keyword) throws ClassNotFoundException, SQLException {
         List<String> suggestions = new ArrayList<>();
         String sql = "SELECT DISTINCT name FROM products WHERE LOWER(name) LIKE ? LIMIT 5";

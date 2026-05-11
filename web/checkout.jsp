@@ -363,7 +363,7 @@
                         <c:if test="${sessionScope.user.role == 'admin'}">
                             <a href="${pageContext.request.contextPath}/admin/dashboard">DASHBOARD</a>
                         </c:if>
-                        <a href="#" class="user-name"><i class="fas fa-user"></i> ${sessionScope.user.fullName}</a>
+                       <a href="${pageContext.request.contextPath}/profile" class="user-name"><i class="fas fa-user"></i> ${sessionScope.user.fullName}</a>
                         <a href="#" onclick="confirmLogout(event)" class="logout-btn">Đăng xuất</a>
                     </c:when>
                     <c:otherwise>

@@ -38,6 +38,33 @@ public class OrderDAO {
         }
         return stats;
     }
+    // Lấy danh sách đơn hàng theo user_id
+
+    public List<Order> getOrdersByUserId(int userId) throws ClassNotFoundException, SQLException {
+        List<Order> orders = new ArrayList<>();
+        String sql = "SELECT o.*, COALESCE(u.full_name, o.name) as customer_name FROM orders o "
+                + "LEFT JOIN users u ON o.user_id = u.id WHERE o.user_id = ? "
+                + "ORDER BY o.created_at DESC";
+
+        try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, userId);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Order order = new Order();
+                    order.setId(rs.getInt("id"));
+                    order.setUserId(rs.getInt("user_id"));
+                    order.setCustomerName(rs.getString("customer_name"));
+                    order.setPhone(rs.getString("phone"));
+                    order.setAddress(rs.getString("address"));
+                    order.setNote(rs.getString("note"));
+                    order.setTotal(rs.getDouble("total"));
+                    order.setOrderDate(rs.getTimestamp("created_at"));
+                    orders.add(order);
+                }
+            }
+        }
+        return orders;
+    }
 
     // Thống kê theo tháng (12 tháng gần nhất)
     public List<Object[]> getMonthlyStats() throws ClassNotFoundException, SQLException {
@@ -292,10 +319,10 @@ public class OrderDAO {
         return order;
     }
 
-    // Lấy danh sách sản phẩm trong đơn hàng
+    // Lấy danh sách sản phẩm trong đơn hàng (có ảnh)
     public List<OrderItem> getOrderItems(int orderId) throws ClassNotFoundException, SQLException {
         List<OrderItem> items = new ArrayList<>();
-        String sql = "SELECT oi.*, p.name as product_name FROM order_items oi "
+        String sql = "SELECT oi.*, p.name as product_name, p.image as product_image FROM order_items oi "
                 + "JOIN products p ON oi.product_id = p.id WHERE oi.order_id = ?";
 
         try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -307,6 +334,7 @@ public class OrderDAO {
                     item.setOrderId(rs.getInt("order_id"));
                     item.setProductId(rs.getInt("product_id"));
                     item.setProductName(rs.getString("product_name"));
+                    item.setProductImage(rs.getString("product_image"));
                     item.setQuantity(rs.getInt("quantity"));
                     item.setPrice(rs.getDouble("price"));
                     items.add(item);
